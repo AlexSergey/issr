@@ -1,0 +1,19 @@
+{
+  "name": "@issr/example-2",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node build",
+    "build": "cross-env NODE_ENV=production node build"
+  },
+  "dependencies": {
+    "@issr/core": "0.9.9-rc.1",
+    "express": "^4.17.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "serialize-javascript": "3.0.0"
+  },
+  "devDependencies": {
+    "@issr/babel-plugin": "0.9.9-rc.1",
+    "@rockpack/compiler": "1.9.0"
+  }
+}

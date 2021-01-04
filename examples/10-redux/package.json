@@ -1,0 +1,28 @@
+{
+  "name": "@issr/example-10",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node build",
+    "build": "cross-env NODE_ENV=production node build"
+  },
+  "dependencies": {
+    "@issr/core": "0.9.9-rc.1",
+    "@reduxjs/toolkit": "1.1.0",
+    "axios": "0.19.0",
+    "immutable": "4.0.0-rc.12",
+    "koa": "2.11.0",
+    "koa-router": "8.0.8",
+    "koa-static": "5.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-redux": "7.1.1",
+    "redux": "4.0.4",
+    "redux-logger": "3.0.6",
+    "redux-saga": "1.1.1",
+    "serialize-javascript": "3.0.0"
+  },
+  "devDependencies": {
+    "@issr/babel-plugin": "0.9.9-rc.1",
+    "@rockpack/compiler": "1.9.0"
+  }
+}

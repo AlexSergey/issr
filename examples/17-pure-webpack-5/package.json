@@ -1,0 +1,26 @@
+{
+  "name": "@issr/example-17",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack -w",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "@issr/core": "0.9.9-rc.1",
+    "koa": "2.11.0",
+    "koa-router": "8.0.8",
+    "koa-static": "5.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "serialize-javascript": "3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.10",
+    "@babel/preset-react": "7.12.10",
+    "babel-loader": "8.2.2",
+    "webpack": "5.11.1",
+    "webpack-cli": "4.3.1",
+    "nodemon-webpack-plugin": "4.3.2",
+    "@issr/babel-plugin": "0.9.9-rc.1"
+  }
+}
