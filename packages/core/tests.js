@@ -1,3 +1,3 @@
-const tester = require('../tester');
+const tester = require('@rockpack/tester');
 
 tester();
