@@ -1,15 +1,23 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchImage } from './action';
+import {requestImage, requestImageError, requestImageSuccess } from './action';
 import { useSsrEffect } from '@issr/core';
+import rest from '../../utils/rest';
 
-const Dogs = () => {
+function getImage(dispatch) {
+  dispatch(requestImage());
+  return rest.get('https://picsum.photos/id/0/info')
+    .then(({ data }) => {
+      dispatch(requestImageSuccess({ url: data.download_url }));
+    })
+    .catch(() => dispatch(requestImageError()))
+}
+
+const Image = () => {
   const dispatch = useDispatch();
   const image = useSelector(state => state.imageReducer);
 
-  useSsrEffect(() => {
-    dispatch(fetchImage());
-  });
+  useSsrEffect(() => dispatch(getImage));
 
   return (
     <div>
@@ -24,4 +32,4 @@ const Dogs = () => {
   );
 };
 
-export default Dogs;
+export default Image;

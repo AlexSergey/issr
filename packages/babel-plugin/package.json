@@ -1,7 +1,7 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "0.9.9-rc.1",
-  "description": "Babel plugin for issr",
+  "version": "1.0.0",
+  "description": "Babel plugin for iSSR",
   "main": "index.js",
   "scripts": {
     "lint": "cross-env NODE_ENV=production eslint \"**\"",

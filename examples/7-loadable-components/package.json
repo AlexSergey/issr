@@ -6,7 +6,7 @@
     "build": "cross-env NODE_ENV=production node build"
   },
   "dependencies": {
-    "@issr/core": "0.9.9-rc.1",
+    "@issr/core": "1.0.0",
     "@loadable/component": "5.14.1",
     "@loadable/server": "5.14.0",
     "history": "4.10.1",
@@ -21,7 +21,7 @@
     "serialize-javascript": "3.0.0"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "0.9.9-rc.1",
+    "@issr/babel-plugin": "1.0.0",
     "@rockpack/compiler": "1.9.0"
   }
 }

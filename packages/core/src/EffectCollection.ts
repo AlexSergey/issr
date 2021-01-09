@@ -28,14 +28,17 @@ export default class EffectCollection {
     const waited = this.getWaited();
 
     if (waited.length > 0) {
-      for (let i = 0, l = waited.length; i < l; i++) {
-        const effect = waited[i];
-        const cb = effect.getCallback();
+      const results = await Promise.allSettled(waited.map(effect => effect.getCallback()));
 
-        await cb;
-
-        effect.done();
-      }
+      results.forEach((result, num) => {
+        const effect = waited[num];
+        if (result.status === 'fulfilled') {
+          effect.done();
+        }
+        if (result.status === 'rejected') {
+          effect.failed();
+        }
+      });
     }
   };
 }

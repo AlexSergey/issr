@@ -1,6 +1,7 @@
 export enum Statuses {
   wait = 'wait',
   done = 'done',
+  failed = 'failed'
 }
 
 interface EffectOptions {
@@ -8,7 +9,7 @@ interface EffectOptions {
 }
 
 class Effect {
-  private id: string;
+  private readonly id: string;
 
   private status: Statuses;
 
@@ -34,6 +35,10 @@ class Effect {
 
   done = (): void => {
     this.status = Statuses.done;
+  };
+
+  failed = (): void => {
+    this.status = Statuses.failed;
   };
 
   getId = (): string => this.id;

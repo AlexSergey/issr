@@ -1,13 +1,4 @@
-const path = require('path');
 const { isomorphicCompiler, backendCompiler, frontendCompiler } = require('@rockpack/compiler');
-
-const alias = {
-  alias: {
-    'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-    react: path.resolve(__dirname, './node_modules/react'),
-    'react-dom/server': path.resolve(__dirname, './node_modules/react-dom/server')
-  }
-};
 
 isomorphicCompiler(
   backendCompiler({
@@ -18,8 +9,6 @@ isomorphicCompiler(
         '@issr/babel-plugin'
       ]
     },
-  }, config => {
-    Object.assign(config.resolve, alias);
   }),
   frontendCompiler({
     src: 'src/client.jsx',
@@ -29,7 +18,5 @@ isomorphicCompiler(
         '@issr/babel-plugin'
       ]
     },
-  }, config => {
-    Object.assign(config.resolve, alias);
   })
 );

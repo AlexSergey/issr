@@ -1,6 +1,8 @@
-# iSSR
+<p align="center">
+  <img alt="Rockpack" src="http://natrube.net/issr/logo.svg">
+</p>
 
-**iSSR** the easiest way to move your React application to Server Side Rendering.
+The easiest way to move your React application to Server Side Rendering.
 
 ## Articles
 
