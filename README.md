@@ -35,7 +35,7 @@ Schematically it looks like this:
 
 ![iSSR](https://www.rockpack.io/readme_assets/rockpack_ussr_1.png)
 
-- SSR application consists of two sub-applications - frontend, backend with common logic.
+- SSR application consists of two sub-applications - frontend and backend with common logic.
 - NodeJS app runs React app.
 - **iSSR** handles all asynchronous operations.
 - After receiving data from asynchronous operations, the React application is rendered.
@@ -46,34 +46,44 @@ Schematically it looks like this:
 The simplest example of an SSR application using an asynchronous function via setState
 
 ### Example:
-There is a simple application without SSR:
+There is a simple Todo List Application without SSR. It's use *jsonplaceholder* for mocking the data:
 
 ```jsx
 import React, { useState, useEffect } from 'react';
 import { render } from 'react-dom';
 
-const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve({ text: 'Hello world' }), 1000));
+const getTodos = () => (
+  fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(data => data.json())
+);
 
-export const App = () => {
-  const [state, setState] = useState({ text: 'text here' });
+const TodoList = () => {
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    asyncFn()
-        .then(data => setState(data))
+    getTodos()
+      .then(todos => setTodos(todos))
   }, []);
 
   return (
     <div>
-      <h1>{state.text}</h1>
+      <h1>Hi</h1>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id} style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>{todo.title}</li>
+        ))}
+      </ul>
     </div>
-  );
-};
+  )
+}
 
 render(
-  <App />,
+  <TodoList />,
   document.getElementById('root')
 );
 ```
+
+It's very simple, when we open the application it will load the todo list data from the server and render it.
 
 **Let's change this app to SSR:**
 
@@ -82,7 +92,14 @@ render(
 ```sh
 # NPM
 npm install @issr/core --save
-npm install @babel/core @babel/preset-react @issr/babel-loader babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
+npm install @babel/core @babel/preset-react @issr/babel-plugin babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
+```
+
+*For this example we should install node-fetch because native **fetch** is not supporting **node.js**. Also, for the server we will use express, but you can use any module*
+
+```sh
+# NPM
+npm install node-fetch express --save
 ```
 
 2. Make *webpack.config.js* in the root of project
@@ -105,7 +122,7 @@ const common = {
                 '@babel/preset-react'
               ],
               plugins: [
-                '@issr/babel-loader'
+                '@issr/babel-plugin'
               ]
             }
           }
@@ -152,31 +169,40 @@ The main goal is to create 2 applications **client** and **server** with common 
 
 ```jsx
 import React from 'react';
+import fetch from 'node-fetch';
 import { useSsrState, useSsrEffect } from '@issr/core';
 
-const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve({ text: 'Hello world' }), 1000));
+const getTodos = () => (
+  fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(data => data.json())
+);
 
 export const App = () => {
-  const [state, setState] = useSsrEffect({ text: 'text here' });
+  const [todos, setTodos] = useSsrState([]);
 
-  useSsrState(async () => {
-    const data = await asyncFn();
-    setState(data);
+  useSsrEffect(async () => {
+    const todos = await getTodos()
+    setTodos(todos);
   });
 
   return (
     <div>
-      <h1>{state.text}</h1>
+      <h1>Hi</h1>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id} style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>{todo.title}</li>
+        ))}
+      </ul>
     </div>
   );
 };
 ```
 
-In this code, *asyncFn* is an asynchronous operation that emulates a call to the server.
+In this code, *getTodos* is an asynchronous operation that make call to the *jsonplaceholder* server and get the todo list data.
 
  - *useSsrState* is analogue of useState only with SSR support
 
- - *useSsrEffect* is analogue useEffect (() => {}, []); for SSR. It works with async logic.
+ - *useSsrEffect* is analogue useEffect (() => {}, []); for SSR. It works with any async logic.
 
 4. **client.jsx** should contain part of the application for Frontend
 
@@ -256,9 +282,19 @@ The server should serve the folder where the build frontend part of application.
 
 This code saves the executed state on the server for later continuation of work with it on the client.
 
+6
+The final step is webpack's scripts for development mode and building. Add to your **package.json**:
+
+```json
+"scripts": {
+  "start": "webpack -w",
+  "build": "webpack"
+},
+```
 ***
 
-**Please see "examples" folder** - <a href="https://github.com/AlexSergey/issr/blob/master/examples" target="_blank">here</a>
+- **Please see [Articles](#articles) to learn how implement SSR for Redux/Sagas/Thunks and other.**
+- **Please see "examples" folder to learn other cases** - <a href="https://github.com/AlexSergey/issr/blob/master/examples" target="_blank">here</a>
 
 ***
 
