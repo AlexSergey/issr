@@ -2,21 +2,21 @@
   <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
-The easiest way to move your React application to Server Side Rendering.
+The easiest way to switch your React application to Server Side Rendering.
 
 ## Articles
 
 ## Features
 - TypeScript support
 - Extremely small size (5kb)
-- Without dependencies
+- No dependencies
 - **iSSR** supports native setState, Redux (thunk, sagas), Mobx, Apollo and other state management libraries
 
 
 ## Getting Started
 Modern JS applications are divided into 2 types:
 - CSR - *Client-Side rendering*. The application will be displayed only after downloading and executing all the necessary JS code. Until then, the user will see a blank page. It degrades the UX and is bad for SEO.
-- SSR - *Server-Side rendering*. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and SEO bots will index the page.
+- SSR - *Server-Side rendering*. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and search engine bots will index the page.
 
 ## SSR
 
@@ -32,14 +32,14 @@ Schematically, the SSR application looks like this:
 
 ## Problems
 
-One of the key problem with SSR applications is asynchronous operations. JS is an asynchronous language, all requests to the server, on which our application data depends, are asynchronous. They affect the state of the system - these are side effects. Since content availability is critical for search engines, we must handle this asynchronous behavior. The React Server Renderer is designed as a synchronous operation that steps through our React-DOM step by step and turns it into HTML.
+One of the key problems with SSR applications are asynchronous operations. JS is an asynchronous language, all requests to the server, on which our application data depends, are asynchronous. They affect the state of the system - these are side effects. Since content availability is critical for search engines, we must handle this asynchronous behavior. The React Server Renderer is designed as a synchronous operation that steps through our React-DOM step by step and turns it into HTML.
 
 The second problem is hydration. A process that allows us to associate the received HTML and the state of the application from the server with what will be built in the user's browser.
 
 **iSSR** handles asynchronous operations and synchronizes state on the client.
 
 ## Motivation
-React currently has many solutions for building SSR applications. The most popular solution is **Next.JS**. This is a great framework with many possibilities, iSSR cannot replace it. But, **Next.JS** is about completely rewriting your existing application. **Next.JS** is a framework, which means you have to use its approaches. **iSSR** is just a small library that handles side effects and synchronizes state.
+React currently has many solutions for building SSR applications. The most popular solution is **Next.JS**. This is a great framework with many possibilities, iSSR cannot replace it. But, **Next.JS** requires rewriting your existing application completely. **Next.JS** is a framework, which means you have to use its approaches. **iSSR** is just a small library that handles side effects and synchronizes state.
 - You can very quickly migrate your existing application to SSR using **iSSR** without major changes.
 - You can use any build system.
 - You can use any state management solution like Redux, Apollo, Mobx or native setState.
@@ -50,7 +50,7 @@ React currently has many solutions for building SSR applications. The most popul
 The simplest example of an SSR application using an asynchronous function via setState
 
 ### Example:
-There is a simple Todo List Application without SSR. It's use *jsonplaceholder* for mocking the data:
+Here is a simple Todo List Application without SSR. It uses *jsonplaceholder* for mocking the data:
 
 ```jsx
 import React, { useState, useEffect } from 'react';
@@ -99,13 +99,13 @@ npm install @issr/core --save
 npm install @issr/babel-plugin --save-dev
 ```
 
-Webpack basic configuration for SSR:
+Basic webpack configuration for SSR:
 ```sh
 # NPM
 npm install @babel/core @babel/preset-react babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
 ```
 
-*For this example we should install node-fetch because native **fetch** is not supporting **node.js**. Also, for the server we will use express, but you can use any module*
+*For this example we should install node-fetch because native **fetch** does not support **node.js**. Also, for the server we will use express, but you can use any module*
 
 ```sh
 # NPM
@@ -175,7 +175,7 @@ module.exports = [
 ```
 The main goal is to create 2 applications **client** and **server** with common logic.
 
-3. Let's separate the general logic from render. Let's create **App.jsx**, and take out the common part for both Frontend and Backend:
+3. Let's separate the general logic from rendering. Let's create **App.jsx**, and take out the common part for both Frontend and Backend:
 
 ```jsx
 import React from 'react';
@@ -208,7 +208,7 @@ export const App = () => {
 };
 ```
 
-In this code, *getTodos* is an asynchronous operation that make call to the *jsonplaceholder* server and get the todo list data.
+In this code, *getTodos* is an asynchronous operation that makes call to the *jsonplaceholder* server and gets the todo list data.
 
  - *useSsrState* is analogue of useState only with SSR support
 
@@ -236,9 +236,9 @@ The code:
 ```js
 const SSR = createSsr(window.SSR_DATA);
 ```
-Associates the state executed on the server with the application on the client. For correct work *useSsrState* on the client
+Associates the state executed on the server with the application on the client side. For correct work *useSsrState* on the client
 
-5. **server.jsx** should contain the logic of the NodeJS application, for this it is convenient to use the koa/express framework or similar:
+5. **server.jsx** should contain the logic of the NodeJS application, it is convenient to use the koa/express framework or similar for this:
 
 ```jsx
 import React from 'react';
@@ -281,7 +281,7 @@ There are 2 important points in this code:
 ```js
 app.use(express.static('public'));
 ```
-The server should serve the folder where the build frontend part of application.
+The server should serve the folder where frontend part of application is built.
 
 5.2
 ```html
@@ -290,7 +290,7 @@ The server should serve the folder where the build frontend part of application.
 </script>
 ```
 
-This code saves the executed state on the server for later continuation of work with it on the client.
+This code saves the executed state on the server to use it on the client side later .
 
 6
 The final step is webpack's scripts for development mode and building. Add to your **package.json**:
