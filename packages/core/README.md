@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Rockpack" src="http://natrube.net/issr/logo.svg">
+  <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
 The easiest way to move your React application to Server Side Rendering.

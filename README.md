@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Rockpack" src="http://natrube.net/issr/logo.svg">
+  <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
 The easiest way to move your React application to Server Side Rendering.
@@ -16,22 +16,11 @@ The easiest way to move your React application to Server Side Rendering.
 ## Getting Started
 Modern JS applications are divided into 2 types:
 - CSR - Client-Side rendering. The application will be displayed only after downloading and executing all the necessary JS code. Until then, the user will see a blank page. It degrades the UX and is bad for SEO.
-- SSR - Server-Side rendering. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and the Secondary Server does not give a blank page but a page with data. The user can immediately start working with the application and SEO bots will index the page.
+- SSR - Server-Side rendering. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and SEO bots will index the page.
 
-There are 2 problems when building SSR applications
+## SSR
 
-## Side effect's issue
-
-For example, in a blog written in React, articles are loaded into the application via an asynchronous request to the server. Articles, in this case, are an important part of the application for the SEO bot to perform high-quality content indexing and for the user to immediately see the page content.
-This asynchronous piece of code must participate in the SSR.
-React out of the box can render an application on the server, but without considering asynchronous operations.
-**iSSR** allows for asynchronous behavior during SSR.
-
-## Compilation issue
-
-In production mode, we need to have an artifact for deployment. For these purposes, we need to compile both the client and the backend of the application.
-
-Schematically it looks like this:
+Schematically, the SSR application looks like this:
 
 ![iSSR](https://www.rockpack.io/readme_assets/rockpack_ussr_1.png)
 
@@ -40,6 +29,21 @@ Schematically it looks like this:
 - **iSSR** handles all asynchronous operations.
 - After receiving data from asynchronous operations, the React application is rendered.
 - NodeJS application serves HTML to the user.
+
+## Problems
+
+One of the key problems with SSR applications is asynchronous operations. JS is an asynchronous language, all requests to the server, on which our application data depends, are asynchronous. They affect the state of the system - these are side effects. Since content availability is critical for search engines, we must handle this asynchronous behavior. The React Server Renderer is designed as a synchronous operation that steps through our React-DOM step by step and turns it into HTML.
+
+The second problem is hydration. A process that allows us to associate the received HTML and the state of the application from the server with what will be built in the user's browser.
+
+**iSSR** handles asynchronous operations and synchronizes state on the client.
+
+## Motivation
+React currently has many solutions for building SSR applications. The most popular solution is **Next.JS**. This is a great framework with many possibilities, iSSR cannot replace it. But, **Next.JS** is about completely rewriting your existing application. **Next.JS** is a framework, which means you have to use its approaches. **iSSR** is just a small library that handles side effects and synchronizes state.
+- You can very quickly migrate your existing application to SSR using iSSR without major changes.
+- You can use any build system.
+- You can use any state management solution like Redux, Apollo, Mobx or native setState.
+- You can use any other SSR libraries (for example @loadable, react-helmet ...).
 
 ## Using
 
