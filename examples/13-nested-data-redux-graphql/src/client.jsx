@@ -11,7 +11,7 @@ import createSsr from '@issr/core';
 import createStore from './store';
 import rest from './utils/rest';
 
-const [SSR] = createSsr(window.SSR_DATA);
+const SSR = createSsr(window.SSR_DATA);
 
 const link = createHttpLink({
   uri: 'http://localhost:3010'

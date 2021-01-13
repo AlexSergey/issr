@@ -8,7 +8,7 @@ import createSsr from './iSSR';
 
 describe('hooks tests', () => {
   test('useSsrEffect - Basic load on ready', async () => {
-    const [SSR, ,effectCollection] = createSsr();
+    const SSR = createSsr();
     let called = false;
 
     const App = (): JSX.Element => {
@@ -30,13 +30,13 @@ describe('hooks tests', () => {
       </SSR>
     ).html();
 
-    await effectCollection.runEffects();
+    await SSR.effectCollection.runEffects();
 
     expect(called).toBe(true);
   });
 
   test('useSsrState - Load state by source', async () => {
-    const [SSR] = createSsr({
+    const SSR = createSsr({
       'custom-id': 'bar'
     });
 
@@ -61,7 +61,7 @@ describe('hooks tests', () => {
   });
 
   test('useSsrState - use setState isomorphic', async () => {
-    const [SSR, getState, effectCollection] = createSsr();
+    const SSR = createSsr();
 
     const App = (): JSX.Element => {
       const [state, setState] = useSsrState('', 'state-0');
@@ -89,8 +89,8 @@ describe('hooks tests', () => {
     )
       .html();
 
-    await effectCollection.runEffects();
-    const state = getState();
+    await SSR.effectCollection.runEffects();
+    const state = SSR.getState();
 
     const key = Object.keys(state)[0];
 

@@ -6,7 +6,7 @@ import { createBrowserHistory } from 'history';
 import { App } from './App';
 import createSsr from '@issr/core';
 
-const [SSR] = createSsr(window.SSR_DATA);
+const SSR = createSsr(window.SSR_DATA);
 
 hydrate(
   <SSR>

@@ -6,7 +6,7 @@ import createSsr from '@issr/core';
 import createStore from './store';
 import rest from './utils/rest';
 
-const [SSR] = createSsr();
+const SSR = createSsr();
 
 const { store } = createStore({
   rest,

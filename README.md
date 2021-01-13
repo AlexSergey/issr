@@ -15,8 +15,8 @@ The easiest way to move your React application to Server Side Rendering.
 
 ## Getting Started
 Modern JS applications are divided into 2 types:
-- CSR - Client-Side rendering. The application will be displayed only after downloading and executing all the necessary JS code. Until then, the user will see a blank page. It degrades the UX and is bad for SEO.
-- SSR - Server-Side rendering. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and SEO bots will index the page.
+- CSR - *Client-Side rendering*. The application will be displayed only after downloading and executing all the necessary JS code. Until then, the user will see a blank page. It degrades the UX and is bad for SEO.
+- SSR - *Server-Side rendering*. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and SEO bots will index the page.
 
 ## SSR
 
@@ -32,7 +32,7 @@ Schematically, the SSR application looks like this:
 
 ## Problems
 
-One of the key problems with SSR applications is asynchronous operations. JS is an asynchronous language, all requests to the server, on which our application data depends, are asynchronous. They affect the state of the system - these are side effects. Since content availability is critical for search engines, we must handle this asynchronous behavior. The React Server Renderer is designed as a synchronous operation that steps through our React-DOM step by step and turns it into HTML.
+One of the key problem with SSR applications is asynchronous operations. JS is an asynchronous language, all requests to the server, on which our application data depends, are asynchronous. They affect the state of the system - these are side effects. Since content availability is critical for search engines, we must handle this asynchronous behavior. The React Server Renderer is designed as a synchronous operation that steps through our React-DOM step by step and turns it into HTML.
 
 The second problem is hydration. A process that allows us to associate the received HTML and the state of the application from the server with what will be built in the user's browser.
 
@@ -40,10 +40,10 @@ The second problem is hydration. A process that allows us to associate the recei
 
 ## Motivation
 React currently has many solutions for building SSR applications. The most popular solution is **Next.JS**. This is a great framework with many possibilities, iSSR cannot replace it. But, **Next.JS** is about completely rewriting your existing application. **Next.JS** is a framework, which means you have to use its approaches. **iSSR** is just a small library that handles side effects and synchronizes state.
-- You can very quickly migrate your existing application to SSR using iSSR without major changes.
+- You can very quickly migrate your existing application to SSR using **iSSR** without major changes.
 - You can use any build system.
 - You can use any state management solution like Redux, Apollo, Mobx or native setState.
-- You can use any other SSR libraries (for example @loadable, react-helmet ...).
+- You can use any other SSR libraries (for example @loadable, react-helmet, etc).
 
 ## Using
 
@@ -96,7 +96,13 @@ It's very simple, when we open the application it will load the todo list data f
 ```sh
 # NPM
 npm install @issr/core --save
-npm install @babel/core @babel/preset-react @issr/babel-plugin babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
+npm install @issr/babel-plugin --save-dev
+```
+
+Webpack basic configuration for SSR:
+```sh
+# NPM
+npm install @babel/core @babel/preset-react babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
 ```
 
 *For this example we should install node-fetch because native **fetch** is not supporting **node.js**. Also, for the server we will use express, but you can use any module*
@@ -216,7 +222,7 @@ import { hydrate } from 'react-dom';
 import createSsr from '@issr/core';
 import { App } from './App';
 
-const [SSR] = createSsr(window.SSR_DATA);
+const SSR = createSsr(window.SSR_DATA);
 
 hydrate(
   <SSR>
@@ -228,7 +234,7 @@ hydrate(
 
 The code:
 ```js
-const [SSR] = createSsr(window.SSR_DATA);
+const SSR = createSsr(window.SSR_DATA);
 ```
 Associates the state executed on the server with the application on the client. For correct work *useSsrState* on the client
 

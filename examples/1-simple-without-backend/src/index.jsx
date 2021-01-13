@@ -22,7 +22,7 @@ const App = ({ children }) => {
 };
 
 (async () => {
-  const [SSR, getState, effectCollection] = createSsr({}, { onlyClient: true });
+  const SSR = createSsr({}, { onlyClient: true });
 
   render(
     <SSR>
@@ -32,8 +32,8 @@ const App = ({ children }) => {
     </SSR>, document.getElementById('root')
   );
 
-  await effectCollection.runEffects();
-  const [SSR2] = createSsr(getState(), { onlyClient: true });
+  await SSR.effectCollection.runEffects();
+  const SSR2 = createSsr(SSR.getState(), { onlyClient: true });
 
   render(
     <SSR2>

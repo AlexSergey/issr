@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, isValidElement } from 'react';
+import React, { createContext, useEffect, isValidElement, FunctionComponent } from 'react';
 import EffectCollection from './EffectCollection';
 import { isBackend, clone } from './utils';
 
@@ -14,11 +14,10 @@ interface OptionsInterface {
   onlyClient?: boolean;
 }
 
-type ReturnCreateISSR = [
-  ({ children }: { children: JSX.Element }) => JSX.Element,
-  () => StateInterface,
-  EffectCollection
-];
+interface ReturnCreateISSR extends FunctionComponent {
+  getState: () => StateInterface;
+  effectCollection: EffectCollection;
+}
 
 interface IssrContextInterface {
   isLoading: () => boolean;
@@ -69,25 +68,26 @@ const createSsr = (initState: InitStateInterface = {}, options: OptionsInterface
 
   const getState = (): StateInterface => clone(app.state);
 
-  return [
-    ({ children }): JSX.Element => (
-      <IssrContext.Provider value={{
-        isLoading,
-        initState,
-        effectCollection,
-        getState
-      }}
-      >
-        {children}
-        <OnComplete
-          loading={app.loading}
-          onLoad={onLoad}
-        />
-      </IssrContext.Provider>
-    ),
-    getState,
-    effectCollection
-  ];
+  const iSSR = ({ children }): JSX.Element => (
+    <IssrContext.Provider value={{
+      isLoading,
+      initState,
+      effectCollection,
+      getState
+    }}
+    >
+      {children}
+      <OnComplete
+        loading={app.loading}
+        onLoad={onLoad}
+      />
+    </IssrContext.Provider>
+  );
+
+  iSSR.getState = getState;
+  iSSR.effectCollection = effectCollection;
+
+  return iSSR;
 };
 
 export default createSsr;

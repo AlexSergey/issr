@@ -5,7 +5,7 @@ import { App } from './App';
 import createSsr from '@issr/core';
 import createStore from './store';
 
-const [SSR] = createSsr();
+const SSR = createSsr();
 
 const { store } = createStore({
   initState: window.REDUX_DATA

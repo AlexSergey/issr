@@ -15,7 +15,7 @@ export const serverRender = async (
   iteration: (count?: number) => JSX.Element,
   outsideEffects?: Function
 ): Promise<ServerRenderResult> => {
-  const [SSR, getState, effectCollection] = createSSR({ });
+  const SSR = createSSR({ });
   const renderNested = async (): Promise<string> => {
     const App = await iteration();
 
@@ -25,7 +25,7 @@ export const serverRender = async (
       </SSR>
     ));
 
-    const waited = effectCollection.getWaited();
+    const waited = SSR.effectCollection.getWaited();
 
     if (typeof outsideEffects === 'function') {
       await outsideEffects();
@@ -36,7 +36,7 @@ export const serverRender = async (
     }
 
     if (waited.length > 0) {
-      await effectCollection.runEffects();
+      await SSR.effectCollection.runEffects();
 
       return await renderNested();
     }
@@ -48,6 +48,6 @@ export const serverRender = async (
 
   return {
     html,
-    state: getState()
+    state: SSR.getState()
   };
 };

@@ -4,7 +4,7 @@ import { CreateStoreProvider } from './Connect';
 import { App } from './App';
 import createSsr from '@issr/core';
 
-const [SSR] = createSsr();
+const SSR = createSsr();
 
 const { StoreProvider } = CreateStoreProvider(window.MOBX_DATA);
 
