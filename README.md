@@ -2,7 +2,7 @@
   <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
-The easiest way to switch your React application to Server Side Rendering.
+The easiest way to move your React application to Server Side Rendering.
 
 ## Table of Contents
 
@@ -16,6 +16,7 @@ The easiest way to switch your React application to Server Side Rendering.
 - [License](#the-mit-license)
 
 ## Articles
+Coming soon...
 
 ## Features
 
