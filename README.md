@@ -4,16 +4,28 @@
 
 The easiest way to switch your React application to Server Side Rendering.
 
+## Table of Contents
+
+- [Articles](#articles)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [SSR](#ssr)
+- [Problems](#problems)
+- [Motivation](#motivation)
+- [Using](#using)
+- [License](#the-mit-license)
+
 ## Articles
 
 ## Features
-- TypeScript support
-- Extremely small size (5kb)
-- No dependencies
-- **iSSR** supports native setState, Redux (thunk, sagas), Mobx, Apollo and other state management libraries
 
+- **iSSR** supports native setState, Redux (thunk, sagas), Mobx, Apollo and other state management libraries
+- TypeScript support
+- Small size (5kb)
+- No dependencies
 
 ## Getting Started
+
 Modern JS applications are divided into 2 types:
 - CSR - *Client-Side rendering*. The application will be displayed only after downloading and executing all the necessary JS code. Until then, the user will see a blank page. It degrades the UX and is bad for SEO.
 - SSR - *Server-Side rendering*. The auxiliary server doesn't send a blank page, but a page with data. Thus, the user can immediately start working with the application, and search engine bots will index the page.
@@ -39,6 +51,7 @@ The second problem is hydration. A process that allows us to associate the recei
 **iSSR** handles asynchronous operations and synchronizes state on the client.
 
 ## Motivation
+
 React currently has many solutions for building SSR applications. The most popular solution is **Next.JS**. This is a great framework with many possibilities, iSSR cannot replace it. But, **Next.JS** requires rewriting your existing application completely. **Next.JS** is a framework, which means you have to use its approaches. **iSSR** is just a small library that handles side effects and synchronizes state.
 - You can very quickly migrate your existing application to SSR using **iSSR** without major changes.
 - You can use any build system.
@@ -50,6 +63,7 @@ React currently has many solutions for building SSR applications. The most popul
 The simplest example of an SSR application using an asynchronous function via setState
 
 ### Example:
+
 Here is a simple Todo List Application without SSR. It uses *jsonplaceholder* for mocking the data:
 
 ```jsx
@@ -91,28 +105,26 @@ It's very simple, when we open the application it will load the todo list data f
 
 **Let's change this app to SSR:**
 
-1. Installation:
+**Step 1**. Installation:
 
 ```sh
-# NPM
 npm install @issr/core --save
 npm install @issr/babel-plugin --save-dev
 ```
 
 Basic webpack configuration for SSR:
+
 ```sh
-# NPM
 npm install @babel/core @babel/preset-react babel-loader webpack webpack-cli nodemon-webpack-plugin --save-dev
 ```
 
 *For this example we should install node-fetch because native **fetch** does not support **node.js**. Also, for the server we will use express, but you can use any module*
 
 ```sh
-# NPM
 npm install node-fetch express --save
 ```
 
-2. Make *webpack.config.js* in the root of project
+**Step 2**. Make *webpack.config.js* in the root of project
 
 ```js
 const path = require('path');
@@ -173,9 +185,10 @@ module.exports = [
   }
 ];
 ```
+
 The main goal is to create 2 applications **client** and **server** with common logic.
 
-3. Let's separate the general logic from rendering. Let's create **App.jsx**, and take out the common part for both Frontend and Backend:
+**Step 3**. Let's separate the general logic from rendering. Let's create **App.jsx**, and take out the common part for both Frontend and Backend:
 
 ```jsx
 import React from 'react';
@@ -214,7 +227,7 @@ In this code, *getTodos* is an asynchronous operation that makes call to the *js
 
  - *useSsrEffect* is analogue useEffect (() => {}, []); for SSR. It works with any async logic.
 
-4. **client.jsx** should contain part of the application for Frontend
+**Step 4**. **client.jsx** should contain part of the application for Frontend
 
 ```jsx
 import React from 'react';
@@ -233,12 +246,14 @@ hydrate(
 ```
 
 The code:
+
 ```js
 const SSR = createSsr(window.SSR_DATA);
 ```
+
 Associates the state executed on the server with the application on the client side. For correct work *useSsrState* on the client
 
-5. **server.jsx** should contain the logic of the NodeJS application, it is convenient to use the koa/express framework or similar for this:
+**Step 5**. **server.jsx** should contain the logic of the NodeJS application, it is convenient to use the koa/express framework or similar for this:
 
 ```jsx
 import React from 'react';
@@ -276,14 +291,15 @@ app.listen(4000, () => {
   console.log('Example app listening on port 4000!');
 });
 ```
+
 There are 2 important points in this code:
-5.1
+
 ```js
 app.use(express.static('public'));
 ```
+
 The server should serve the folder where frontend part of application is built.
 
-5.2
 ```html
 <script>
   window.SSR_DATA = ${serialize(state, { isJSON: true })}
@@ -292,7 +308,7 @@ The server should serve the folder where frontend part of application is built.
 
 This code saves the executed state on the server to use it on the client side later .
 
-6
+**Step 6**
 The final step is webpack's scripts for development mode and building. Add to your **package.json**:
 
 ```json
@@ -315,5 +331,3 @@ Copyright (c) Aleksandrov Sergey
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
