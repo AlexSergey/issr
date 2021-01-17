@@ -1,5 +1,5 @@
 {
-  "name": "@issr/example-17",
+  "name": "@issr/example-18",
   "version": "1.0.0",
   "scripts": {
     "start": "webpack -w --mode development",
@@ -21,6 +21,7 @@
     "webpack": "5.11.1",
     "webpack-cli": "4.3.1",
     "nodemon-webpack-plugin": "4.3.2",
-    "@issr/babel-plugin": "1.0.0"
+    "@issr/babel-plugin": "1.0.0",
+    "source-map-support": "0.5.19"
   }
 }

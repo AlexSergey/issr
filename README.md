@@ -71,10 +71,10 @@ Here is a simple Todo List Application without SSR. It uses *jsonplaceholder* fo
 import React, { useState, useEffect } from 'react';
 import { render } from 'react-dom';
 
-const getTodos = () => (
-  fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(data => data.json())
-);
+const getTodos = () => {
+  return fetch('https://jsonplaceholder.typicode.com/todos')
+   .then(data => data.json())
+};
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
@@ -131,7 +131,7 @@ npm install node-fetch express --save
 const path = require('path');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
-const common = {
+const commonConfig = {
   module: {
     rules: [
       {
@@ -163,7 +163,7 @@ const common = {
 
 module.exports = [
   {
-    ...common,
+    ...commonConfig,
     target: 'node',
     entry: './src/server.jsx',
     output: {
@@ -177,7 +177,7 @@ module.exports = [
     ]
   },
   {
-    ...common,
+    ...commonConfig,
     entry: './src/client.jsx',
     output: {
       path: path.resolve(__dirname, './public'),
@@ -196,10 +196,10 @@ import React from 'react';
 import fetch from 'node-fetch';
 import { useSsrState, useSsrEffect } from '@issr/core';
 
-const getTodos = () => (
-  fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(data => data.json())
-);
+const getTodos = () => {
+  return fetch('https://jsonplaceholder.typicode.com/todos')
+   .then(data => data.json())
+};
 
 export const App = () => {
   const [todos, setTodos] = useSsrState([]);
@@ -314,7 +314,7 @@ The final step is webpack's scripts for development mode and building. Add to yo
 
 ```json
 "scripts": {
-  "start": "webpack -w",
+  "start": "webpack -w --mode development",
   "build": "webpack"
 },
 ```

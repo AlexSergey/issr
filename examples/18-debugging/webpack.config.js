@@ -35,6 +35,7 @@ module.exports = [
   {
     ...commonConfig,
     target: 'node',
+    devtool: 'source-map',
     entry: './src/server.jsx',
     output: {
       path: path.resolve(__dirname, './dist'),
@@ -43,6 +44,10 @@ module.exports = [
     plugins: [
       new NodemonPlugin({
         watch: path.resolve(__dirname, './dist'),
+        nodeArgs: [
+          `--inspect`,
+          '--require="source-map-support/register"'
+        ]
       })
     ]
   },
