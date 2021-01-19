@@ -1,6 +1,6 @@
 {
   "name": "@issr/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
