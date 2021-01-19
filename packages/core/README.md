@@ -2,12 +2,13 @@
   <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
-The easiest way to move your React application to Server Side Rendering.
+The easiest way to move your React application to Server-Side Rendering. Handles Side Effects and synchronizes State.
 
 [README](https://github.com/AlexSergey/issr)
 
 ## Articles
-Coming soon...
+[RU: Server-Side Rendering с нуля до профи](https://habr.com/ru/post/527310/)
+[ENG: Server-Side Rendering from zero to hero](https://dev.to/alexsergey/server-side-rendering-from-zero-to-hero-2610)
 
 ## Features
 - TypeScript support

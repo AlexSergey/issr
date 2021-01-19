@@ -2,7 +2,7 @@
   <img alt="iSSR" src="http://natrube.net/issr/logo.svg">
 </p>
 
-The easiest way to move your React application to Server Side Rendering.
+The easiest way to move your React application to Server-Side Rendering. Handles Side Effects and synchronizes State.
 
 ## Table of Contents
 
@@ -16,7 +16,8 @@ The easiest way to move your React application to Server Side Rendering.
 - [License](#the-mit-license)
 
 ## Articles
-Coming soon...
+[RU: Server-Side Rendering с нуля до профи](https://habr.com/ru/post/527310/)
+[ENG: Server-Side Rendering from zero to hero](https://dev.to/alexsergey/server-side-rendering-from-zero-to-hero-2610)
 
 ## Features
 
@@ -35,7 +36,7 @@ Modern JS applications are divided into 2 types:
 
 Schematically, the SSR application looks like this:
 
-![iSSR](https://www.rockpack.io/readme_assets/rockpack_ussr_1.png)
+![iSSR](http://natrube.net/issr/schema.png)
 
 - SSR application consists of two sub-applications - frontend and backend with common logic.
 - NodeJS app runs React app.

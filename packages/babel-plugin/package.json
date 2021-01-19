@@ -1,6 +1,6 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Babel plugin for iSSR",
   "main": "index.js",
   "scripts": {
