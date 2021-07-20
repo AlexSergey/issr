@@ -29,8 +29,6 @@ const BabelISSRPlugin = (api) => {
       CallExpression(path, { opts: options, file }) {
         const { filename, cwd } = file.opts;
 
-        const id = md5(pathNode.relative(cwd, filename));
-
         const effectName = options && (
           typeof options.effect === 'string' ||
           Array.isArray(options.effect)
@@ -57,6 +55,7 @@ const BabelISSRPlugin = (api) => {
           // eslint-disable-next-line sonarjs/no-collapsible-if
           if (path.node.callee.name === effect) {
             if (path.node.arguments.length < 2) {
+              const id = md5(pathNode.relative(cwd, filename));
               createDummy(globalCache, id, 'effect');
               const effectID = `effect-${id}-${globalCache[id].effect++}`;
               path.node.arguments.push(t.StringLiteral(effectID));
@@ -68,6 +67,7 @@ const BabelISSRPlugin = (api) => {
           // eslint-disable-next-line sonarjs/no-collapsible-if
           if (path.node.callee.name === stateName) {
             if (path.node.arguments.length < 2) {
+              const id = md5(pathNode.relative(cwd, filename));
               createDummy(globalCache, id, 'setState');
               const setStateID = `state-${id}-${globalCache[id].setState++}`;
               path.node.arguments.push(t.StringLiteral(setStateID));

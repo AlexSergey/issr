@@ -1414,6 +1414,18 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
+"@issr/babel-plugin@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@issr/babel-plugin/-/babel-plugin-1.0.0.tgz#1dec54a8912649a7354693223cd74e61eb9ce7f7"
+  integrity sha512-iiTXaFbPs9dEMD48W96sMfkx+UDINggsi7Kxw1pvoQ85MIzalfhciwCFoQCsOWIXnQCPndoAnOv+DD+r2+2sMw==
+  dependencies:
+    md5 "2.3.0"
+
+"@issr/core@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@issr/core/-/core-1.0.0.tgz#5bb88f11879bf85156c787757ee8d364acf59793"
+  integrity sha512-X5SISHxUTta0wRWls8mcEUO3TEj/5aD3GmwvcepJZcPR7i8wodN1ZKDEjvP9I9o14uJsKM9rwSH4eX2uzeATMg==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
