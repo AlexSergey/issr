@@ -31,9 +31,9 @@ export const useSsrState = <T>(defaultValue: T, id?: string): [T, (componentStat
 
   const appStateFragment: T = useMemo<T>(
     () => (
-      !initState[key] ?
-        defaultValue :
-        initState[key]
+      typeof initState[key] === 'boolean' || initState[key] ?
+        initState[key] :
+        defaultValue
     ),
     [initState, key, defaultValue]
   );
