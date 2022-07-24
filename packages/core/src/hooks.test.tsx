@@ -12,7 +12,7 @@ describe('hooks tests', () => {
     let called = false;
 
     const App = (): JSX.Element => {
-      useSsrEffect(() => (
+      useSsrEffect((): Promise<void> => (
         new Promise(resolve => {
           setTimeout(() => {
             called = true;
@@ -66,7 +66,7 @@ describe('hooks tests', () => {
     const App = (): JSX.Element => {
       const [state, setState] = useSsrState('', 'state-0');
 
-      useSsrEffect(() => (
+      useSsrEffect((): Promise<void> => (
         new Promise(resolve => {
           setTimeout(() => {
             setState('async bar');
@@ -95,5 +95,44 @@ describe('hooks tests', () => {
     const key = Object.keys(state)[0];
 
     expect(state).toStrictEqual({ [key]: 'async bar' });
+  });
+
+  test('useSsrState - boolean', async () => {
+    const SSR = createSsr({
+      'state-0': true
+    });
+
+    const App = (): JSX.Element => {
+      const [state, setState] = useSsrState(true, 'state-0');
+
+      useSsrEffect((): Promise<void> => (
+        new Promise(resolve => {
+          setTimeout(() => {
+            setState(false);
+            resolve();
+          }, 300);
+        })
+      ), 'effect-0');
+
+      return (
+        <div>
+          {JSON.stringify(state)}
+        </div>
+      );
+    };
+
+    shallow(
+      <SSR>
+        <App />
+      </SSR>
+    )
+      .html();
+
+    await SSR.effectCollection.runEffects();
+    const state = SSR.getState();
+
+    const key = Object.keys(state)[0];
+
+    expect(state).toStrictEqual({ [key]: false });
   });
 });

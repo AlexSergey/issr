@@ -8,8 +8,8 @@ function* watchFetchImage(rest) {
 function* fetchImageAsync(rest) {
   try {
     yield put(requestImage());
-    const { data } = yield call(() => rest.get('https://picsum.photos/id/0/info'));
-    yield put(requestImageSuccess({ url: data.download_url }));
+    const { data } = yield call(() => rest.get('https://api.github.com/users/defunkt'));
+    yield put(requestImageSuccess({ url: data.avatar_url }));
   } catch (error) {
     yield put(requestImageError());
   }

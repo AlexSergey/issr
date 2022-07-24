@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-shadow
 export enum Statuses {
   wait = 'wait',
   done = 'done',

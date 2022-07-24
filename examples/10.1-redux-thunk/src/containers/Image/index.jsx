@@ -6,9 +6,9 @@ import rest from '../../utils/rest';
 
 function getImage(dispatch) {
   dispatch(requestImage());
-  return rest.get('https://picsum.photos/id/0/info')
+  return rest.get('https://api.github.com/users/defunkt')
     .then(({ data }) => {
-      dispatch(requestImageSuccess({ url: data.download_url }));
+      dispatch(requestImageSuccess({ url: data.avatar_url }));
     })
     .catch(() => dispatch(requestImageError()))
 }

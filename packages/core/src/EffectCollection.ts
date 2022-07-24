@@ -17,7 +17,7 @@ export default class EffectCollection {
 
   getEffects = (): Effect[] => Array.from(this.effects.values());
 
-  getEffect = (effectId: string): Effect|undefined => this.effects.get(effectId);
+  getEffect = (effectId: string): Effect | undefined => this.effects.get(effectId);
 
   getWaited = (): Effect[] => {
     const effects = this.getEffects();

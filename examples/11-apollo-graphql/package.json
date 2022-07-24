@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "3.1.5",
-    "@issr/core": "1.0.0",
+    "@issr/core": "1.2.0",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-client": "2.6.8",
     "apollo-link-http": "1.5.17",
@@ -16,13 +16,13 @@
     "koa-router": "8.0.8",
     "koa-static": "5.0.0",
     "node-fetch": "2.6.0",
-    "react": "16.13.1",
+    "react": "17.0.2",
     "react-apollo": "3.1.5",
-    "react-dom": "16.13.1",
+    "react-dom": "17.0.2",
     "serialize-javascript": "3.0.0"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "1.0.0",
-    "@rockpack/compiler": "1.9.0"
+    "@issr/babel-plugin": "1.2.0",
+    "@rockpack/compiler": "2.0.1"
   }
 }

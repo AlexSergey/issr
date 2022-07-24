@@ -10,7 +10,7 @@ describe('server render tests', () => {
     const App = (): JSX.Element => {
       const [state, setState] = useSsrState('', 'state-0');
 
-      useSsrEffect(() => (
+      useSsrEffect((): Promise<void> => (
         new Promise(resolve => {
           setTimeout(() => {
             setState('test bar');
@@ -59,7 +59,7 @@ describe('server render tests', () => {
       const [state, setState] = useSsrState('', 'state-0');
 
       // eslint-disable-next-line sonarjs/no-identical-functions
-      useSsrEffect(() => (
+      useSsrEffect((): Promise<void> => (
         // eslint-disable-next-line sonarjs/no-identical-functions
         new Promise(resolve => {
           setTimeout(() => {

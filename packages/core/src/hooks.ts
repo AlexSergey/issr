@@ -31,9 +31,11 @@ export const useSsrState = <T>(defaultValue: T, id?: string): [T, (componentStat
 
   const appStateFragment: T = useMemo<T>(
     () => (
-      !initState[key] ?
-        defaultValue :
-        initState[key]
+      (
+        typeof initState[key] === 'undefined' ?
+          defaultValue :
+          initState[key]
+      ) as T
     ),
     [initState, key, defaultValue]
   );
@@ -62,7 +64,7 @@ export const useSsrState = <T>(defaultValue: T, id?: string): [T, (componentStat
   return [state, hook.current.setState];
 };
 
-export const useSsrEffect = (cb?: Function, id?: string): void => {
+export const useSsrEffect = <T extends Function>(cb?: T, id?: string): void => {
   const effectId = (typeof cb === 'string' && typeof id === 'undefined') ?
     cb :
     typeof id === 'undefined' ?

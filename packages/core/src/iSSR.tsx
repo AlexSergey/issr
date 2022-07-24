@@ -21,7 +21,7 @@ interface ReturnCreateISSR extends FunctionComponent {
 
 interface IssrContextInterface {
   isLoading: () => boolean;
-  initState: InitStateInterface | {};
+  initState: InitStateInterface | Record<string, unknown>;
   effectCollection: EffectCollection;
   getState: () => StateInterface;
 }

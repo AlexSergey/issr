@@ -11,9 +11,9 @@ interface ServerRenderResult {
   state: StateInterface;
 }
 
-export const serverRender = async (
+export const serverRender = async <T extends Function>(
   iteration: (count?: number) => JSX.Element,
-  outsideEffects?: Function
+  outsideEffects?: T
 ): Promise<ServerRenderResult> => {
   const SSR = createSSR({ });
   const renderNested = async (): Promise<string> => {

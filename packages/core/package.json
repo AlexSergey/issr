@@ -1,6 +1,6 @@
 {
   "name": "@issr/core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,18 +32,19 @@
     "rockpack"
   ],
   "private": false,
+  "peerDependencies": {
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
+  },
   "devDependencies": {
-    "@rockpack/codestyle": "1.9.0",
-    "@rockpack/compiler": "1.9.0",
-    "@rockpack/tester": "1.9.0",
+    "@rockpack/codestyle": "2.0.1",
+    "@rockpack/compiler": "2.0.1",
+    "@rockpack/tester": "2.0.1",
     "@types/enzyme": "3.10.8",
-    "@types/enzyme-adapter-react-16": "1.0.6",
     "@types/jest": "26.0.12",
-    "@types/react": "17.0.0",
-    "@types/react-dom": "16.9.8",
+    "@types/react": "17.0.47",
+    "@types/react-dom": "17.0.17",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.4",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "@wojtekmaj/enzyme-adapter-react-17": "0.6.7"
   }
 }
