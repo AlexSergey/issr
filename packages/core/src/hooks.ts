@@ -1,103 +1,122 @@
-import { useContext, useState, useRef, useMemo, useEffect } from 'react';
-import { isBackend, getRandomID } from './utils';
-import { IssrContext } from './iSSR';
-import { Effect } from './Effect';
+import {
+  useContext,
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  EffectCallback,
+  DependencyList,
+  useCallback,
+} from 'react';
 
-interface IssrState<T> {
-  setState(componentState: T, skip?: boolean): void;
-}
+import { Effect } from './effect';
+import { IssrContext } from './i-ssr';
+import { isBackend } from './utils';
 
-export const useSsrState = <T>(defaultValue: T, id?: string): [T, (componentState: T, skip?: boolean) => void] => {
-  const key = typeof id === 'undefined' ?
-    getRandomID() :
-    id;
-
-  const hook = useRef<false | IssrState<T>>(false);
-  const { isLoading, initState } = useContext(IssrContext);
-  const loading = isLoading();
-  const loaded = !loading;
-  const isClient = !isBackend();
-  const hookIsNotReady = hook.current === false;
-  const setImmediately = isClient && loaded && hookIsNotReady;
-
-  if (
-    setImmediately &&
-    initState[key] &&
-    process.env.NODE_ENV !== 'production'
-  ) {
-    // eslint-disable-next-line no-console
-    console.warn(`Key should be unique! The key "${key}" is already exist in InitialState`);
+export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Dispatch<SetStateAction<S>>] => {
+  if (typeof id !== 'string') {
+    throw new Error(
+      '"useSsrState" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
+    );
   }
+  const { initState } = useContext(IssrContext);
 
-  const appStateFragment: T = useMemo<T>(
-    () => (
-      (
-        typeof initState[key] === 'undefined' ?
-          defaultValue :
-          initState[key]
-      ) as T
-    ),
-    [initState, key, defaultValue]
+  const appStateFragment: S = useMemo<S>(
+    () => (typeof initState[id] === 'undefined' ? initialState : initState[id]) as S,
+    [initState, id, initialState],
   );
-  const [state, setState] = useState<T>(appStateFragment);
+  const [state, setState] = useState<S>(appStateFragment);
 
-  useEffect(() => (): void => {
-    // Clear Global state when component was unmounted
-    initState[key] = undefined;
-    delete initState[key];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const modifiedSetState = useCallback((innerState: S | ((prevState: S) => S)) => {
+    const s = innerState instanceof Function ? innerState(initState[id] as S) : innerState;
+    initState[id] = s;
+
+    setState(s);
   }, []);
 
-  if (!hook.current) {
-    hook.current = {
-      setState: (componentState: T, skip?: boolean): void => {
-        const s = typeof componentState === 'function' ? componentState(state) : componentState;
-        initState[key] = s;
+  useEffect(
+    () => (): void => {
+      // Clear Global state when component was unmounted
+      initState[id] = undefined;
+      delete initState[id];
+    },
+    [],
+  );
 
-        if (!skip) {
-          setState(s);
-        }
-      }
-    };
-  }
-
-  return [state, hook.current.setState];
+  return [state, modifiedSetState];
 };
 
-export const useSsrEffect = <T extends Function>(cb?: T, id?: string): void => {
-  const effectId = (typeof cb === 'string' && typeof id === 'undefined') ?
-    cb :
-    typeof id === 'undefined' ?
-      getRandomID() :
-      id;
+export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
+  // eslint-disable-next-line no-nested-ternary
+  const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
+
+  if (typeof effectId !== 'string') {
+    throw new Error(
+      '"useSsrEffect" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
+    );
+  }
 
   const initHook = useRef(true);
-  const { isLoading, effectCollection } = useContext(IssrContext);
+  const { isLoading, setEffectCalledState, getEffectCalledState } = useContext(IssrContext);
+  const isCalled = getEffectCalledState(effectId);
   const loading = isLoading();
-  const loaded = !loading;
   const isClient = !isBackend();
-  const onLoadOnTheClient = isClient && loaded && initHook.current;
-  const onLoadOnTheBackend = isBackend() && initHook.current;
-
+  const firstLoadingOnTheClient = isClient && loading && initHook.current;
+  const firstLoadingOnTheBackend = isBackend() && initHook.current && !isCalled;
   initHook.current = false;
 
-  if (onLoadOnTheClient) {
-    if (typeof cb === 'function') {
-      cb();
-    }
-    // eslint-disable-next-line sonarjs/no-collapsible-if
-  } else if (onLoadOnTheBackend) {
-    if (!effectCollection.getEffect(effectId)) {
-      const effect = new Effect({ id: effectId });
+  // Effect on the backend side must run immediately
+  if (firstLoadingOnTheBackend) {
+    effect();
+    setEffectCalledState(effectId);
+
+    return;
+    // First call after hydration must be skipped on the client side
+  }
+  if (firstLoadingOnTheClient) {
+    return;
+  }
+
+  if (Array.isArray(deps)) {
+    useEffect(effect, deps);
+  } else {
+    useEffect(effect);
+  }
+};
+
+export const useRegisterEffect = (
+  id?: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): (<ArgumentsType extends any[], ReturnType>(
+  cb: (...args: ArgumentsType) => ReturnType,
+  ...args: ArgumentsType
+) => ReturnType) => {
+  if (typeof id !== 'string') {
+    throw new Error(
+      '"useRegisterEffect" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
+    );
+  }
+
+  const { effectCollection } = useContext(IssrContext);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <ArgumentsType extends any[], ReturnType>(
+    cb: (...args: ArgumentsType) => ReturnType,
+    ...args: ArgumentsType
+  ): ReturnType => {
+    const res = cb(...args);
+
+    if (!effectCollection.getEffect(id)) {
+      const effect = new Effect({ id });
       effectCollection.addEffect(effect);
 
-      if (typeof cb === 'function') {
-        const res = cb();
-
-        if (res instanceof Promise && effect instanceof Effect) {
-          effect.addCallback(res);
-        }
+      if (res instanceof Promise) {
+        effect.addCallback(res);
       }
     }
-  }
+
+    return res;
+  };
 };

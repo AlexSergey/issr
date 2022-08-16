@@ -5,11 +5,19 @@ function* watchFetchImage(rest) {
   yield takeEvery(fetchImage, fetchImageAsync, rest);
 }
 
+const callApi = () => (
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Large_breaking_wave.jpg/800px-Large_breaking_wave.jpg' });
+    }, 500);
+  })
+)
+
 function* fetchImageAsync(rest) {
   try {
     yield put(requestImage());
-    const { data } = yield call(() => rest.get('https://api.github.com/users/defunkt'));
-    yield put(requestImageSuccess({ url: data.avatar_url }));
+    const { url } = yield call(() => callApi());
+    yield put(requestImageSuccess({ url }));
   } catch (error) {
     yield put(requestImageError());
   }

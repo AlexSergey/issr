@@ -1,4 +1,3 @@
-import React from 'react';
 import express from 'express';
 import serialize from 'serialize-javascript';
 import { App } from './App';
@@ -9,7 +8,7 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/*', async (req, res) => {
-  const { html, state } = await serverRender(() => <App />);
+  const { html, state } = await serverRender.string(() => <App />);
   res.send(`
   <!DOCTYPE html>
 <html lang="en">

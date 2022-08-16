@@ -1,5 +1,6 @@
+const pathNode = require('node:path');
+
 const md5 = require('md5');
-const pathNode = require('path');
 
 function getTarget(caller) {
   return caller && caller.target;
@@ -8,8 +9,9 @@ function getTarget(caller) {
 const createDummy = (globalCache, id, field) => {
   if (!globalCache[id]) {
     globalCache[id] = {
-      setState: 0,
-      effect: 0
+      useRegisterEffect: 0,
+      useSsrEffect: 0,
+      useSsrState: 0,
     };
   }
   if (!globalCache[id][field]) {
@@ -29,53 +31,71 @@ const BabelISSRPlugin = (api) => {
       CallExpression(path, { opts: options, file }) {
         const { filename, cwd } = file.opts;
 
-        const effectName = options && (
-          typeof options.effect === 'string' ||
-          Array.isArray(options.effect)
-        ) ?
-          options.effect :
-          'useSsrEffect';
+        const useRegisterEffectName =
+          options && (typeof options.useRegisterEffect === 'string' || Array.isArray(options.useRegisterEffect))
+            ? options.useRegisterEffect
+            : 'useRegisterEffect';
 
-        const setStateName = options && (
-          typeof options.setState === 'string' ||
-          Array.isArray(options.setState)
-        ) ?
-          options.setState :
-          'useSsrState';
+        const useSsrStateName =
+          options && (typeof options.useSsrState === 'string' || Array.isArray(options.useSsrState))
+            ? options.useSsrState
+            : 'useSsrState';
 
-        const effects = Array.isArray(effectName) ?
-          effectName :
-          [effectName];
+        const useSsrEffectName =
+          options && (typeof options.useSsrEffect === 'string' || Array.isArray(options.useSsrEffect))
+            ? options.useSsrEffect
+            : 'useSsrEffect';
 
-        const stateNames = Array.isArray(setStateName) ?
-          setStateName :
-          [setStateName];
+        const useRegisterEffectNames = Array.isArray(useRegisterEffectName)
+          ? useRegisterEffectName
+          : [useRegisterEffectName];
 
-        effects.forEach(effect => {
-          // eslint-disable-next-line sonarjs/no-collapsible-if
-          if (path.node.callee.name === effect) {
-            if (path.node.arguments.length < 2) {
+        const useSsrStateNames = Array.isArray(useSsrStateName) ? useSsrStateName : [useSsrStateName];
+
+        const useSsrEffects = Array.isArray(useSsrEffectName) ? useSsrEffectName : [useSsrEffectName];
+
+        useSsrEffects.forEach((ssrEffectName) => {
+          if (path.node.callee.name === ssrEffectName) {
+            const args = path.node.arguments;
+            const lastItem = args[args.length - 1];
+            const lastItemIsArray = lastItem.type === 'ArrayExpression';
+            const firstItemIsFunction = lastItem.type.indexOf('FunctionExpression') >= 0;
+
+            if (
+              (path.node.arguments.length === 2 && lastItemIsArray) ||
+              (path.node.arguments.length === 1 && firstItemIsFunction)
+            ) {
               const id = md5(pathNode.relative(cwd, filename));
-              createDummy(globalCache, id, 'effect');
-              const effectID = `effect-${id}-${globalCache[id].effect++}`;
+              createDummy(globalCache, id, 'useSsrEffect');
+              const effectID = `ssr-effect-${id}-${globalCache[id].useSsrEffect++}`;
               path.node.arguments.push(t.StringLiteral(effectID));
             }
           }
         });
 
-        stateNames.forEach(stateName => {
-          // eslint-disable-next-line sonarjs/no-collapsible-if
-          if (path.node.callee.name === stateName) {
-            if (path.node.arguments.length < 2) {
+        useRegisterEffectNames.forEach((registerEffect) => {
+          if (path.node.callee.name === registerEffect) {
+            if (path.node.arguments.length === 0) {
               const id = md5(pathNode.relative(cwd, filename));
-              createDummy(globalCache, id, 'setState');
-              const setStateID = `state-${id}-${globalCache[id].setState++}`;
+              createDummy(globalCache, id, 'useRegisterEffect');
+              const effectID = `register-effect-${id}-${globalCache[id].useRegisterEffect++}`;
+              path.node.arguments.push(t.StringLiteral(effectID));
+            }
+          }
+        });
+
+        useSsrStateNames.forEach((stateName) => {
+          if (path.node.callee.name === stateName) {
+            if (path.node.arguments.length === 1) {
+              const id = md5(pathNode.relative(cwd, filename));
+              createDummy(globalCache, id, 'useSsrState');
+              const setStateID = `state-${id}-${globalCache[id].useSsrState++}`;
               path.node.arguments.push(t.StringLiteral(setStateID));
             }
           }
         });
-      }
-    }
+      },
+    },
   };
 };
 

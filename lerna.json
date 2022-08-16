@@ -2,7 +2,8 @@
   "npmClient": "yarn",
   "packages": [
     "examples/*",
-    "packages/*"
+    "packages/*",
+    "performance/*"
   ],
   "version": "independent"
 }

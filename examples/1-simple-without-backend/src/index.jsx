@@ -1,17 +1,17 @@
-/* eslint-disable */
-import React from 'react';
 import { render } from 'react-dom';
-import createSsr, { useSsrState, useSsrEffect } from '@issr/core';
+import { createSsr, useRegisterEffect, useSsrState, useSsrEffect } from '@issr/core';
 
 const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world'), 1000));
 
 const App = ({ children }) => {
   const [state, setState] = useSsrState('text here');
+  const registerEffect = useRegisterEffect();
 
-  useSsrEffect(async () => {
-    const data = await asyncFn();
-    setState(data);
-  });
+  useSsrEffect(() => {
+    registerEffect(asyncFn).then(data => {
+      setState(data);
+    });
+  }, []);
 
   return (
     <div>

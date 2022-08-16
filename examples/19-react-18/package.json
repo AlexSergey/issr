@@ -1,0 +1,22 @@
+{
+  "name": "@issr/example-19",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node build",
+    "build": "cross-env NODE_ENV=production node build"
+  },
+  "dependencies": {
+    "@issr/core": "2.0.0",
+    "koa": "2.11.0",
+    "koa-router": "8.0.8",
+    "koa-static": "5.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "serialize-javascript": "3.0.0",
+    "stream-concat": "1.0.0"
+  },
+  "devDependencies": {
+    "@issr/babel-plugin": "2.0.0",
+    "@rockpack/compiler": "3.0.0-next.2"
+  }
+}

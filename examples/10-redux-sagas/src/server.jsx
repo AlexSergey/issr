@@ -1,5 +1,4 @@
 import path from 'path';
-import React from 'react';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -22,13 +21,15 @@ router.get('/*', async (ctx) => {
     rest
   });
 
-  const { html } = await serverRender(() => (
+  const { html } = await serverRender.string(() => (
     <Provider store={store}>
       <App />
     </Provider>
-  ), async () => {
-    store.dispatch(END);
-    await rootSaga.toPromise();
+  ), {
+    outsideEffects: async () => {
+      store.dispatch(END);
+      await rootSaga.toPromise();
+    }
   });
 
   ctx.body = `

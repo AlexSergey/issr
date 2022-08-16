@@ -1,0 +1,67 @@
+{
+  "name": "frontendCompiler",
+  "hash": "ca69bcb7461e7b985ef6",
+  "publicPath": "/",
+  "outputPath": "/Users/serhii_aleksandrov/Desktop/Projects/my/github/issr/performance/react-18-server-render-stream/public",
+  "assetsByChunkName": {
+    "index": [
+      "index.js"
+    ]
+  },
+  "assets": [
+    {
+      "type": "asset",
+      "name": "index.js",
+      "size": 218443,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "javascriptModule": false,
+        "minimized": true,
+        "related": {
+          "license": "index.js.LICENSE.txt"
+        }
+      },
+      "chunkNames": [
+        "index"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "filteredRelated": 1,
+      "chunks": [
+        0
+      ],
+      "auxiliaryChunks": []
+    }
+  ],
+  "namedChunkGroups": {
+    "index": {
+      "name": "index",
+      "chunks": [
+        0
+      ],
+      "assets": [
+        {
+          "name": "index.js"
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": null,
+      "filteredAuxiliaryAssets": 0,
+      "auxiliaryAssetsSize": 0,
+      "children": {},
+      "childAssets": {}
+    }
+  },
+  "generator": "loadable-components",
+  "chunks": [
+    {
+      "id": 0,
+      "files": [
+        "index.js"
+      ]
+    }
+  ]
+}

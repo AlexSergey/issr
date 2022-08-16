@@ -1,15 +1,16 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSsrState, useSsrEffect } from '@issr/core';
+import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 import { asyncFn } from './asyncFn';
 
 const Home = () => {
   const [state, setState] = useSsrState('i am test ');
+  const registerEffect = useRegisterEffect();
 
-  useSsrEffect(async () => {
-    const data = await asyncFn();
-    setState(data);
-  });
+  useSsrEffect(() => {
+    registerEffect(asyncFn).then(data => {
+      setState(data);
+    });
+  }, []);
 
   return (
     <>

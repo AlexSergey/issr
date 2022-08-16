@@ -1,15 +1,15 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchImage } from './action';
-import { useSsrEffect } from '@issr/core';
+import { useSsrEffect, useRegisterEffect } from '@issr/core';
 
 const Image = () => {
   const dispatch = useDispatch();
   const image = useSelector(state => state.imageReducer);
+  const registerEffect = useRegisterEffect();
 
   useSsrEffect(() => {
-    dispatch(fetchImage());
-  });
+    registerEffect(dispatch, fetchImage());
+  }, []);
 
   return (
     <div>

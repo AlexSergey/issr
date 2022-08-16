@@ -1,6 +1,8 @@
-const enzyme = require('enzyme');
 const Adapter = require('@wojtekmaj/enzyme-adapter-react-17');
+const enzyme = require('enzyme');
 
 enzyme.configure({
-  adapter: new Adapter()
+  adapter: new Adapter(),
 });
+
+jest.setTimeout(10000);

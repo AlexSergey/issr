@@ -1,5 +1,4 @@
 import path from 'path';
-import React from 'react';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -20,7 +19,7 @@ router.get('/*', async (ctx) => {
     context: {}
   };
 
-  const { html, state } = await serverRender(() => (
+  const { html, state } = await serverRender.string(() => (
     <StaticRouter {...routerParams}>
       <App />
     </StaticRouter>

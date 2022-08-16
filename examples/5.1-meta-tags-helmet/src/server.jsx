@@ -1,5 +1,4 @@
 import path from 'path';
-import React from 'react';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -25,7 +24,7 @@ router.get('/*', async (ctx) => {
 
   const helmetContext = {};
 
-  const { html, state } = await serverRender(() => (
+  const { html, state } = await serverRender.string(() => (
     <HelmetProvider context={helmetContext}>
       <StaticRouter {...routerParams}>
         <App />

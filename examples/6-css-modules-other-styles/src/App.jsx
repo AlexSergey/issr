@@ -1,7 +1,6 @@
-import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import MetaTags from 'react-meta-tags';
-import { useSsrState, useSsrEffect } from '@issr/core';
+import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 import styles from './styles.module.scss';
 import './styles.css';
 
@@ -9,11 +8,13 @@ const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello w
 
 const Home = () => {
   const [state, setState] = useSsrState('i am test ');
+  const registerEffect = useRegisterEffect();
 
-  useSsrEffect(async () => {
-    const data = await asyncFn();
-    setState(data);
-  });
+  useSsrEffect(() => {
+    registerEffect(asyncFn).then(data => {
+      setState(data);
+    });
+  }, []);
 
   return (
     <>

@@ -1,5 +1,4 @@
 import path from 'path';
-import React from 'react';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -24,7 +23,7 @@ router.get('/*', async (ctx) => {
   };
   const metaTagsInstance = MetaTagsServer();
 
-  const { html, state } = await serverRender(() => (
+  const { html, state } = await serverRender.string(() => (
     <MetaTagsContext extract={metaTagsInstance.extract}>
       <StaticRouter {...routerParams}>
         <App />

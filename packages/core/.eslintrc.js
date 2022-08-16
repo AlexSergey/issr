@@ -1,6 +1,8 @@
-const { rockConfig } = require('@rockpack/codestyle');
+const { makeConfig } = require('@rockpack/codestyle');
 
-module.exports = rockConfig({
+module.exports = makeConfig();
+
+/*module.exports = rockConfig({
   '@typescript-eslint/return-await': 'off',
   'react/jsx-no-constructed-context-values': 'off',
   '@typescript-eslint/ban-types': 'off'
@@ -8,4 +10,4 @@ module.exports = rockConfig({
   globals: {
     JSX: true
   }
-});
+});*/

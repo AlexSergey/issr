@@ -1,8 +1,8 @@
-import React from 'react'
+import { createContext, useContext } from 'react';
 import { useLocalObservable } from 'mobx-react'
 import { createHelloWorldStore } from './store';
 
-const storeContext = React.createContext(null);
+const storeContext = createContext(null);
 
 export const CreateStoreProvider = (initialState = {
   helloWorld: {}
@@ -22,7 +22,7 @@ export const CreateStoreProvider = (initialState = {
 }
 
 export const useStore = () => {
-  const store = React.useContext(storeContext)
+  const store = useContext(storeContext)
   if (!store) {
     // this is especially useful in TypeScript so you don't need to be checking for null all the time
     throw new Error('useStore must be used within a StoreProvider.')

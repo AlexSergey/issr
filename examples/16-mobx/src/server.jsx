@@ -1,5 +1,4 @@
 import path from 'path';
-import React from 'react';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -16,7 +15,7 @@ app.use(serve(path.resolve(__dirname, '../public')));
 router.get('/*', async (ctx) => {
   const { StoreProvider, api } = CreateStoreProvider()
 
-  const { html } = await serverRender(() => (
+  const { html } = await serverRender.string(() => (
     <StoreProvider>
       <App />
     </StoreProvider>

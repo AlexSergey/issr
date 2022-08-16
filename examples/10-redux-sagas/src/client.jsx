@@ -1,8 +1,7 @@
-import React from 'react';
 import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux';
 import { App } from './App';
-import createSsr from '@issr/core';
+import { createSsr } from '@issr/core';
 import createStore from './store';
 import rest from './utils/rest';
 

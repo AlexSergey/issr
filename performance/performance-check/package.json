@@ -1,0 +1,15 @@
+{
+  "name": "performance-check",
+  "version": "1.0.0",
+  "scripts": {
+    "string": "node scripts.seo.check.js --type string",
+    "stream": "node scripts.seo.check.js --type stream"
+  },
+  "dependencies": {
+    "lighthouse": "9.6.5",
+    "puppeteer": "16.1.0",
+    "chrome-launcher": "0.15.1",
+    "request": "2.88.2",
+    "yargs": "17.5.1"
+  }
+}

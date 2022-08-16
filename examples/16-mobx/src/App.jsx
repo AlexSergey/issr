@@ -1,14 +1,14 @@
-import React from 'react';
 import { observer } from 'mobx-react';
 import { useStore } from './Connect';
-import { useSsrEffect } from '@issr/core';
+import { useSsrEffect, useRegisterEffect } from '@issr/core';
 
 export const App = observer(() => {
   const { helloWorld } = useStore();
+  const registerEffect = useRegisterEffect();
 
-  useSsrEffect(async () => {
-    await helloWorld.setString();
-  });
+  useSsrEffect(() => {
+    registerEffect(helloWorld.setString);
+  }, []);
 
   return (
     <div>

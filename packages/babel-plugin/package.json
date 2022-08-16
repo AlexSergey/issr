@@ -1,22 +1,8 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "1.2.0",
+  "version": "2.0.0",
+  "private": false,
   "description": "Babel plugin for iSSR",
-  "main": "index.js",
-  "scripts": {
-    "lint": "cross-env NODE_ENV=production eslint \"**\"",
-    "production": "npm run lint && npm publish --access public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexSergey/issr.git"
-  },
-  "author": "Aleksandrov Sergey <gooddev.sergey@gmail.com> (https://github.com/AlexSergey/issr)",
-  "license": "MIT",
-  "homepage": "https://github.com/AlexSergey/issr",
-  "bugs": {
-    "url": "https://github.com/AlexSergey/issr/issues"
-  },
   "keywords": [
     "babel",
     "ssr",
@@ -26,11 +12,29 @@
     "react",
     "rockpack"
   ],
-  "private": false,
+  "homepage": "https://github.com/AlexSergey/issr",
+  "bugs": {
+    "url": "https://github.com/AlexSergey/issr/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexSergey/issr.git"
+  },
+  "license": "MIT",
+  "author": "Aleksandrov Sergey <gooddev.sergey@gmail.com> (https://github.com/AlexSergey/issr)",
+  "main": "index.js",
+  "scripts": {
+    "format": "npm run format:package && npm run format:prettier && npm run format:code && npm run format:styles",
+    "format:code": "eslint \"index.js\" --fix",
+    "format:package": "sort-package-json",
+    "format:prettier": "prettier --write \"index.js\"",
+    "lint": "cross-env NODE_ENV=production eslint \"**\"",
+    "production": "npm run lint && npm publish --access public"
+  },
   "dependencies": {
     "md5": "2.3.0"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "2.0.1"
+    "@rockpack/codestyle": "3.0.0-next.2"
   }
 }

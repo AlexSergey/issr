@@ -42,7 +42,7 @@ Schematically, the SSR application looks like this:
 - NodeJS app runs React app.
 - **iSSR** handles all asynchronous operations.
 - After receiving data from asynchronous operations, the React application is rendered.
-- NodeJS application serves HTML to the user.
+- NodeJS' application serves HTML to the user.
 
 ## Problems
 
@@ -60,7 +60,7 @@ React currently has many solutions for building SSR applications. The most popul
 - You can use any state management solution like Redux, Apollo, Mobx or native setState.
 - You can use any other SSR libraries (for example @loadable, react-helmet, etc).
 
-## Using
+## Usage
 
 The simplest example of an SSR application using an asynchronous function via setState
 
@@ -69,7 +69,7 @@ The simplest example of an SSR application using an asynchronous function via se
 Here is a simple Todo List Application without SSR. It uses *jsonplaceholder* for mocking the data:
 
 ```jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { render } from 'react-dom';
 
 const getTodos = () => {
@@ -195,7 +195,7 @@ The main goal is to create 2 applications **client** and **server** with common 
 ```jsx
 import React from 'react';
 import fetch from 'node-fetch';
-import { useSsrState, useSsrEffect } from '@issr/core';
+import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 
 const getTodos = () => {
   return fetch('https://jsonplaceholder.typicode.com/todos')
@@ -204,11 +204,13 @@ const getTodos = () => {
 
 export const App = () => {
   const [todos, setTodos] = useSsrState([]);
+  const registerEffect = useRegisterEffect();
 
-  useSsrEffect(async () => {
-    const todos = await getTodos()
-    setTodos(todos);
-  });
+  useSsrEffect(() => {
+    registerEffect(getTodos).then(todos => {
+      setTodos(todos);
+    });
+  }, []);
 
   return (
     <div>
@@ -225,16 +227,35 @@ export const App = () => {
 
 In this code, *getTodos* is an asynchronous operation that makes call to the *jsonplaceholder* server and gets the todo list data.
 
+ - *useRegisterEffect* is a hook to wrap your async logic. Async method from this function will fetch the data from the server.
+**if you need to pass additional parameters to the function you can pass these params to registerEffect**:
+```js
+const getTodos = (page) => {
+  return fetch(`https://somedatasite.com/articles/${page}`)
+    .then(data => data.json())
+};
+// ....
+const [page, setPage] = useSsrState(1);
+const [todos, setTodos] = useSsrState([]);
+  const registerEffect = useRegisterEffect();
+
+  useSsrEffect(() => {
+    registerEffect(getTodos, page).then(todos => {
+      setTodos(todos);
+    });
+  }, [page]);
+```
+
  - *useSsrState* is analogue of useState only with SSR support
 
- - *useSsrEffect* is analogue useEffect (() => {}, []); for SSR. It works with any async logic.
+ - *useSsrEffect* is analogue React's useEffect; for SSR.
 
 **Step 4**. **client.jsx** should contain part of the application for Frontend
 
 ```jsx
 import React from 'react';
 import { hydrate } from 'react-dom';
-import createSsr from '@issr/core';
+import { createSsr } from '@issr/core';
 import { App } from './App';
 
 const SSR = createSsr(window.SSR_DATA);
@@ -269,7 +290,7 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/*', async (req, res) => {
-  const { html, state } = await serverRender(() => <App />);
+  const { html, state } = await serverRender.string(() => <App />);
 
   res.send(`
   <!DOCTYPE html>
@@ -293,6 +314,9 @@ app.listen(4000, () => {
   console.log('Example app listening on port 4000!');
 });
 ```
+ - *sererRender* - contains 2 methods:
+   - **string** - will render your application to the string
+   - **stream** - this method will work React 18 only. It's *PipeableStream*. Please, see the example: [React18](https://github.com/AlexSergey/issr/blob/master/examples/19-react-18)
 
 There are 2 important points in this code:
 
