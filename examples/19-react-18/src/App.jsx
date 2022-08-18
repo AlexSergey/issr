@@ -10,9 +10,8 @@ export const App = () => {
 
   useSsrEffect(() => {
     registerEffect(asyncFn).then((data) => {
-      console.log('test', s);
       setState(data);
-    })
+    });
   }, [s]);
 
   return (
