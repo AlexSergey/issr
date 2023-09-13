@@ -21,6 +21,9 @@
       "pre-push": "npm run lint && npm run typing && npm test"
     }
   },
+  "dependencies": {
+    "node-gyp": "9.4.0"
+  },
   "devDependencies": {
     "lerna": "3.22.1",
     "husky": "4.2.5"

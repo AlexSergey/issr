@@ -48,6 +48,17 @@ export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Di
   return [state, modifiedSetState];
 };
 
+export const useSsrEffect2 = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
+  // eslint-disable-next-line no-nested-ternary
+  const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
+
+  if (typeof effectId !== 'string') {
+    throw new Error(
+      '"useSsrEffect" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
+    );
+  }
+};
+
 export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
   // eslint-disable-next-line no-nested-ternary
   const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
@@ -59,6 +70,7 @@ export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | str
   }
 
   const initHook = useRef(true);
+  const cb = useRef(effect);
   const { isLoading, setEffectCalledState, getEffectCalledState } = useContext(IssrContext);
   const isCalled = getEffectCalledState(effectId);
   const loading = isLoading();
@@ -66,24 +78,32 @@ export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | str
   const firstLoadingOnTheClient = isClient && loading && initHook.current;
   const firstLoadingOnTheBackend = isBackend() && initHook.current && !isCalled;
   initHook.current = false;
+  const allDeps = Array.isArray(deps) ? deps : [];
 
-  // Effect on the backend side must run immediately
+  useEffect(() => {
+    cb.current = effect;
+  }, [effect]);
+
+  // Effect on the backend side must run synchronously
   if (firstLoadingOnTheBackend) {
     effect();
     setEffectCalledState(effectId);
+  }
 
-    return;
+  useEffect(() => {
     // First call after hydration must be skipped on the client side
-  }
-  if (firstLoadingOnTheClient) {
-    return;
-  }
-
-  if (Array.isArray(deps)) {
-    useEffect(effect, deps);
-  } else {
-    useEffect(effect);
-  }
+    if (firstLoadingOnTheClient) {
+      return;
+    }
+    // Already called in the backend side
+    if (firstLoadingOnTheBackend) {
+      return;
+    }
+    if (typeof cb.current === 'function') {
+      // eslint-disable-next-line consistent-return
+      return cb.current();
+    }
+  }, allDeps.concat([firstLoadingOnTheBackend, firstLoadingOnTheClient]));
 };
 
 export const useRegisterEffect = (
