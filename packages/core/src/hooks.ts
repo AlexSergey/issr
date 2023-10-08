@@ -48,17 +48,6 @@ export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Di
   return [state, modifiedSetState];
 };
 
-export const useSsrEffect2 = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
-  // eslint-disable-next-line no-nested-ternary
-  const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
-
-  if (typeof effectId !== 'string') {
-    throw new Error(
-      '"useSsrEffect" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
-    );
-  }
-};
-
 export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
   // eslint-disable-next-line no-nested-ternary
   const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
