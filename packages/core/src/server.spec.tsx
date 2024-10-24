@@ -1,12 +1,14 @@
 /**
  * @jest-environment node
  */
-import { useSsrState, useSsrEffect, useRegisterEffect } from './hooks';
+import { PropsWithChildren, ReactNode } from 'react';
+
+import { useRegisterEffect, useSsrEffect, useSsrState } from './hooks';
 import { serverRender } from './server';
 
 describe('server render tests', () => {
   test('pure state', async () => {
-    const App = (): JSX.Element => {
+    const App = (): ReactNode => {
       const [state, setState] = useSsrState('', 'state-0');
       const registerEffect = useRegisterEffect('effect-0');
 
@@ -55,7 +57,7 @@ describe('server render tests', () => {
       }
     };
 
-    const App = (): JSX.Element => {
+    const App = (): ReactNode => {
       const [state, setState] = useSsrState('', 'state-0');
       const registerEffect = useRegisterEffect('effect-0');
 
@@ -93,7 +95,6 @@ describe('server render tests', () => {
   test('nested effects', async () => {
     const asyncFn1 = (): Promise<{ show: boolean; value: string }> =>
       new Promise((resolve) =>
-        // eslint-disable-next-line no-promise-executor-return
         setTimeout(
           () =>
             resolve({
@@ -104,7 +105,7 @@ describe('server render tests', () => {
         ),
       );
 
-    const Wrapper = ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element => {
+    const Wrapper = ({ children }: PropsWithChildren): ReactNode => {
       const [state, setState] = useSsrState({ show: false, value: 'none ' }, 'state-0');
       const registerEffect = useRegisterEffect('effect-0');
 
@@ -128,7 +129,6 @@ describe('server render tests', () => {
 
     const asyncFn2 = (): Promise<{ show: boolean; value: string }> =>
       new Promise((resolve) =>
-        // eslint-disable-next-line no-promise-executor-return
         setTimeout(
           () =>
             resolve({
@@ -139,7 +139,7 @@ describe('server render tests', () => {
         ),
       );
 
-    const A = ({ children }: { children: JSX.Element }): JSX.Element => {
+    const A = ({ children }: PropsWithChildren): ReactNode => {
       const [state, setState] = useSsrState({ show: false, value: 'none ' }, 'state-1');
       const registerEffect = useRegisterEffect('effect-1');
 
@@ -161,11 +161,9 @@ describe('server render tests', () => {
       );
     };
 
-    const asyncFn3 = (): Promise<string> =>
-      // eslint-disable-next-line no-promise-executor-return
-      new Promise((resolve) => setTimeout(() => resolve('B Component'), 300));
+    const asyncFn3 = (): Promise<string> => new Promise((resolve) => setTimeout(() => resolve('B Component'), 300));
 
-    const B = (): JSX.Element => {
+    const B = (): ReactNode => {
       const [state, setState] = useSsrState('none', 'state-2');
       const registerEffect = useRegisterEffect('effect-2');
 
@@ -186,10 +184,9 @@ describe('server render tests', () => {
       );
     };
 
-    // eslint-disable-next-line no-promise-executor-return
     const asyncFn4 = (): Promise<string> => new Promise((resolve) => setTimeout(() => resolve('C Component'), 300));
 
-    const C = (): JSX.Element => {
+    const C = (): ReactNode => {
       const [state, setState] = useSsrState('none', 'state-3');
       const registerEffect = useRegisterEffect('effect-3');
 
@@ -210,7 +207,7 @@ describe('server render tests', () => {
       );
     };
 
-    const App = (): JSX.Element => (
+    const App = (): ReactNode => (
       <Wrapper>
         <A>
           <B />

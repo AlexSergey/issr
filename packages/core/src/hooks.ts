@@ -1,21 +1,21 @@
 import {
-  useContext,
-  useState,
-  useRef,
-  useMemo,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  EffectCallback,
   DependencyList,
+  Dispatch,
+  EffectCallback,
+  SetStateAction,
   useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 
 import { Effect } from './effect';
 import { IssrContext } from './i-ssr';
 import { isBackend } from './utils';
 
-export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Dispatch<SetStateAction<S>>] => {
+export const useSsrState = <S>(initialState: (() => S) | S, id?: string): [S, Dispatch<SetStateAction<S>>] => {
   if (typeof id !== 'string') {
     throw new Error(
       '"useSsrState" hook: id is not a string. iSSR required @issr/babel-loader. You can follow official documentation to setup your build system https://github.com/AlexSergey/issr#usage',
@@ -29,7 +29,7 @@ export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Di
   );
   const [state, setState] = useState<S>(appStateFragment);
 
-  const modifiedSetState = useCallback((innerState: S | ((prevState: S) => S)) => {
+  const modifiedSetState = useCallback((innerState: ((prevState: S) => S) | S) => {
     const s = innerState instanceof Function ? innerState(initState[id] as S) : innerState;
     initState[id] = s;
 
@@ -49,7 +49,6 @@ export const useSsrState = <S>(initialState: S | (() => S), id?: string): [S, Di
 };
 
 export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | string, id?: string): void => {
-  // eslint-disable-next-line no-nested-ternary
   const effectId = Array.isArray(deps) ? id : typeof deps === 'string' ? deps : false;
 
   if (typeof effectId !== 'string') {
@@ -60,7 +59,7 @@ export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | str
 
   const initHook = useRef(true);
   const cb = useRef(effect);
-  const { isLoading, setEffectCalledState, getEffectCalledState } = useContext(IssrContext);
+  const { getEffectCalledState, isLoading, setEffectCalledState } = useContext(IssrContext);
   const isCalled = getEffectCalledState(effectId);
   const loading = isLoading();
   const isClient = !isBackend();
@@ -79,20 +78,22 @@ export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | str
     setEffectCalledState(effectId);
   }
 
-  useEffect(() => {
-    // First call after hydration must be skipped on the client side
-    if (firstLoadingOnTheClient) {
-      return;
-    }
-    // Already called in the backend side
-    if (firstLoadingOnTheBackend) {
-      return;
-    }
-    if (typeof cb.current === 'function') {
-      // eslint-disable-next-line consistent-return
-      return cb.current();
-    }
-  }, allDeps.concat([firstLoadingOnTheBackend, firstLoadingOnTheClient]));
+  useEffect(
+    () => {
+      // First call after hydration must be skipped on the client side
+      if (firstLoadingOnTheClient) {
+        return;
+      }
+      // Already called in the backend side
+      if (firstLoadingOnTheBackend) {
+        return;
+      }
+      if (typeof cb.current === 'function') {
+        return cb.current();
+      }
+    },
+    allDeps.concat([firstLoadingOnTheBackend, firstLoadingOnTheClient]),
+  );
 };
 
 export const useRegisterEffect = (

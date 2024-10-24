@@ -1,5 +1,4 @@
 import { Switch, Route, Link } from 'react-router-dom';
-import MetaTags from 'react-meta-tags';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 import styles from './styles.module.scss';
 import './styles.css';
@@ -18,10 +17,6 @@ const Home = () => {
 
   return (
     <>
-      <MetaTags>
-        <title>Home</title>
-        <meta name="description" content="Home page" />
-      </MetaTags>
       <div className={styles.block}>
         <h1>{state}</h1>
         <Link to="/secondary">secondary</Link>

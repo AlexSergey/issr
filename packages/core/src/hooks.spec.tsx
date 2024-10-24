@@ -1,12 +1,24 @@
 /**
  * @jest-environment node
  */
-import { shallow } from 'enzyme';
+import { JSX } from 'react';
+import { renderToString } from 'react-dom/server';
 
-import { useSsrEffect, useSsrState, useRegisterEffect } from './hooks';
+
+import { useRegisterEffect, useSsrEffect, useSsrState } from './hooks';
 import { createSsr } from './i-ssr';
 
 describe('hooks tests', () => {
+  const { window } = global;
+  beforeEach(() => {
+    // @ts-ignore
+    delete global.window;
+  });
+
+  afterEach(() => {
+    global.window = window;
+  });
+
   test('useRegisterEffect - check effects registration', async () => {
     const SSR = createSsr();
     let called = false;
@@ -20,7 +32,6 @@ describe('hooks tests', () => {
 
     const App = (): JSX.Element | null => {
       const registerEffect = useRegisterEffect('effect-0');
-
       useSsrEffect(
         () => {
           registerEffect(promisedFn).then(() => {
@@ -34,11 +45,11 @@ describe('hooks tests', () => {
       return null;
     };
 
-    shallow(
+    renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     await SSR.effectCollection.runEffects();
 
@@ -72,11 +83,11 @@ describe('hooks tests', () => {
       return null;
     };
 
-    shallow(
+    renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     await SSR.effectCollection.runEffects();
 
@@ -110,11 +121,11 @@ describe('hooks tests', () => {
       return null;
     };
 
-    shallow(
+    renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     await SSR.effectCollection.runEffects();
 
@@ -132,11 +143,11 @@ describe('hooks tests', () => {
       return <div>{state}</div>;
     };
 
-    const result = shallow(
+    const result = renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     expect(result).toBe('<div>bar</div>');
   });
@@ -168,11 +179,11 @@ describe('hooks tests', () => {
       return <div>{state}</div>;
     };
 
-    shallow(
+    renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     await SSR.effectCollection.runEffects();
     const state = SSR.getState();
@@ -207,11 +218,11 @@ describe('hooks tests', () => {
       return <div>{JSON.stringify(state)}</div>;
     };
 
-    shallow(
+    renderToString(
       <SSR>
         <App />
       </SSR>,
-    ).html();
+    );
 
     await SSR.effectCollection.runEffects();
     const state = SSR.getState();

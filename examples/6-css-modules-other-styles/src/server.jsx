@@ -4,8 +4,6 @@ import serve from 'koa-static';
 import Router from 'koa-router';
 import { StaticRouter } from 'react-router';
 import serialize from 'serialize-javascript';
-import MetaTagsServer from 'react-meta-tags/server';
-import { MetaTagsContext } from 'react-meta-tags';
 
 import { App } from './App';
 import { serverRender } from '@issr/core';
@@ -21,22 +19,17 @@ router.get('/*', async (ctx) => {
     location: url,
     context: {}
   };
-  const metaTagsInstance = MetaTagsServer();
 
   const { html, state } = await serverRender.string(() => (
-    <MetaTagsContext extract={metaTagsInstance.extract}>
-      <StaticRouter {...routerParams}>
-        <App />
-      </StaticRouter>
-    </MetaTagsContext>
+    <StaticRouter {...routerParams}>
+      <App />
+    </StaticRouter>
   ));
-  const meta = metaTagsInstance.renderToString();
 
   ctx.body = `
   <!DOCTYPE html>
 <html lang="en">
 <head>
-    ${meta}
     <link rel="stylesheet" type="text/css" href="/css/styles.css" />
     <script>
       window.SSR_DATA = ${serialize(state, { isJSON: true })}

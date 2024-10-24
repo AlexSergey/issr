@@ -16,6 +16,6 @@
   },
   "devDependencies": {
     "@issr/babel-plugin": "2.0.0",
-    "@rockpack/compiler": "3.0.0-next.2"
+    "@rockpack/compiler": "4.5.2"
   }
 }

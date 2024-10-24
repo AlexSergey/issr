@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { isBackend, isClient, clone } from './utils';
+import { clone, isBackend, isClient } from './utils';
 
 describe('Utils tests', () => {
   test('isBackend utils test', () => {

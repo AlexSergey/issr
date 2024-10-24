@@ -1,39 +1,35 @@
-import { createContext, useEffect, isValidElement, FunctionComponent } from 'react';
+import { createContext, FunctionComponent, isValidElement, JSX, useEffect } from 'react';
 
 import { EffectCollection } from './effect-collection';
-import { isBackend, clone } from './utils';
+import { clone, isBackend } from './utils';
 
-export interface IInitState {
-  [key: string]: unknown;
-}
+export type IInitState = Record<string, unknown>;
 
-export interface IState {
-  [key: string]: unknown;
-}
+export type IState = Record<string, unknown>;
 
 interface IOptions {
   onlyClient?: boolean;
 }
 
 interface IReturnCreateIssr<P> extends FunctionComponent<P> {
-  getState: () => IState;
   effectCollection: EffectCollection;
+  getState: () => IState;
 }
 
 interface IIssrContext {
-  isLoading: () => boolean;
-  initState: IInitState | Record<string, unknown>;
   effectCollection: EffectCollection;
-  getState: () => IState;
-  setEffectCalledState: (id: string) => void;
   getEffectCalledState: (id: string) => boolean;
+  getState: () => IState;
+  initState: IInitState | Record<string, unknown>;
+  isLoading: () => boolean;
+  setEffectCalledState: (id: string) => void;
 }
 
 type ExcludeFn = (...args: unknown[]) => JSX.Element;
 
 export const IssrContext = createContext<IIssrContext>({} as IIssrContext);
 
-export const ExcludeSsr = ({ children }: { children: JSX.Element | ExcludeFn }): JSX.Element | null => {
+export const ExcludeSsr = ({ children }: { children: ExcludeFn | JSX.Element }): JSX.Element | null => {
   if (isBackend()) {
     return null;
   }
@@ -63,10 +59,8 @@ const OnComplete = ({ loading, onLoad }: IOnComplete): JSX.Element | null => {
 };
 
 interface IApp {
+  calledState: Record<string, boolean>;
   loading: boolean;
-  calledState: {
-    [key: string]: boolean;
-  };
   state: IInitState;
 }
 

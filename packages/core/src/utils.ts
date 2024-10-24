@@ -1,6 +1,4 @@
-interface IState {
-  [key: string]: unknown;
-}
+type IState = Record<string, unknown>;
 
 export const isBackend = (): boolean => typeof window === 'undefined';
 

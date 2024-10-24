@@ -1,6 +1,6 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": false,
   "description": "Babel plugin for iSSR",
   "keywords": [
@@ -24,17 +24,17 @@
   "author": "Aleksandrov Sergey <gooddev.sergey@gmail.com> (https://github.com/AlexSergey/issr)",
   "main": "index.js",
   "scripts": {
-    "format": "npm run format:package && npm run format:prettier && npm run format:code && npm run format:styles",
-    "format:code": "eslint \"index.js\" --fix",
+    "format": "npm run format:package && npm run format:prettier && npm run format:code",
+    "format:code": "eslint . --fix",
     "format:package": "sort-package-json",
     "format:prettier": "prettier --write \"index.js\"",
-    "lint": "cross-env NODE_ENV=production eslint \"**\"",
+    "lint": "eslint .",
     "production": "npm run lint && npm publish --access public"
   },
   "dependencies": {
     "md5": "2.3.0"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "3.0.0-next.2"
+    "@rockpack/codestyle": "4.5.2"
   }
 }

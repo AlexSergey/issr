@@ -1,6 +1,5 @@
-const pathNode = require('node:path');
-
 const md5 = require('md5');
+const pathNode = require('node:path');
 
 function getTarget(caller) {
   return caller && caller.target;
@@ -29,8 +28,8 @@ const BabelISSRPlugin = (api) => {
   return {
     name: 'issr',
     visitor: {
-      CallExpression(path, { opts: options, file }) {
-        const { filename, cwd } = file.opts;
+      CallExpression(path, { file, opts: options }) {
+        const { cwd, filename } = file.opts;
 
         const useRegisterEffectName =
           options && (typeof options.useRegisterEffect === 'string' || Array.isArray(options.useRegisterEffect))

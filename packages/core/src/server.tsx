@@ -1,10 +1,9 @@
-import ReactDOMServer, { RenderToPipeableStreamOptions, PipeableStream } from 'react-dom/server';
+import { JSX } from 'react';
+import ReactDOMServer, { PipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
 
 import { createSsr, IInitState } from './i-ssr';
 
-interface IState {
-  [key: string]: unknown;
-}
+type IState = Record<string, unknown>;
 
 interface IServerRenderResultString {
   html: string;
@@ -12,8 +11,8 @@ interface IServerRenderResultString {
 }
 
 interface IServerRenderResultStream {
-  stream: PipeableStream;
   state: IState;
+  stream: PipeableStream;
 }
 
 interface IServerRenderOptions<T> {
@@ -24,6 +23,7 @@ interface IServerRenderOptions<T> {
 }
 
 export const serverRender = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   stream: async <T extends Function>(
     iteration: (count?: number) => JSX.Element,
     opts?: IServerRenderOptions<T>,
@@ -74,7 +74,7 @@ export const serverRender = {
       stream,
     };
   },
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   string: async <T extends Function>(
     iteration: (count?: number) => JSX.Element,
     opts?: IServerRenderOptions<T>,

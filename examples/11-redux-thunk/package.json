@@ -15,14 +15,14 @@
     "koa-static": "5.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-redux": "7.1.1",
-    "redux": "4.0.4",
+    "react-redux": "8.1.3",
+    "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "serialize-javascript": "3.0.0"
   },
   "devDependencies": {
     "@issr/babel-plugin": "2.0.0",
-    "@rockpack/compiler": "3.0.0-next.2"
+    "@rockpack/compiler": "4.5.2"
   }
 }
