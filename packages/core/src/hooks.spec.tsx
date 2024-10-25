@@ -4,14 +4,14 @@
 import { JSX } from 'react';
 import { renderToString } from 'react-dom/server';
 
-
 import { useRegisterEffect, useSsrEffect, useSsrState } from './hooks';
 import { createSsr } from './i-ssr';
 
 describe('hooks tests', () => {
   const { window } = global;
   beforeEach(() => {
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     delete global.window;
   });
 

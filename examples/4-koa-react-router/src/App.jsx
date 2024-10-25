@@ -1,4 +1,4 @@
-import { Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 
 const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world'), 1000));
@@ -28,9 +28,17 @@ const Secondary = () => (
   </div>
 );
 
-export const App = () => (
-  <Switch>
-    <Route path="/secondary" component={Secondary} />
-    <Route path="/" component={Home} exact />
-  </Switch>
-);
+export const routes = [
+  {
+    children: [
+      {
+        element: <Secondary />,
+        path: '/secondary',
+      },
+      {
+        element: <Home />,
+        path: '/',
+      },
+    ],
+  },
+];

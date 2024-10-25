@@ -1,6 +1,6 @@
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 
-const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world 3'), 1000));
+const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world'), 1000));
 
 export const App = () => {
   const [state, setState] = useSsrState('i am test ');

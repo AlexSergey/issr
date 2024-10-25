@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { fetchImage, requestImage, requestImageSuccess, requestImageError } from './action';
+import { fetchImage } from './action';
+import { requestImage, requestImageSuccess, requestImageError } from './slice';
 
 function* watchFetchImage(rest) {
   yield takeEvery(fetchImage, fetchImageAsync, rest);

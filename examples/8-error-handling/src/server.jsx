@@ -13,7 +13,7 @@ const pe = new PrettyError();
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
-router.get('/*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   const { html, state } = await serverRender.string(() => <App />);
   ctx.body = `
   <!DOCTYPE html>

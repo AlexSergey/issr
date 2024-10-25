@@ -15,7 +15,7 @@ const router = new Router();
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
-router.get('/*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   const { store, rootSaga } = createStore({
     initState: { },
     rest

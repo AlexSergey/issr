@@ -11,7 +11,7 @@ const router = new Router();
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
-router.get('/*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   const { html, state } = await serverRender.string(() => <App />);
   ctx.body = `
   <!DOCTYPE html>
@@ -19,7 +19,7 @@ router.get('/*', async (ctx) => {
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    ${process.env.NODE_ENV === 'development' ? <script src="/dev-server.js"></script> : ''}
+    ${process.env.NODE_ENV === 'development' ? '<script src="/dev-server.js"></script>' : ''}
     <script>
       window.SSR_DATA = ${serialize(state, { isJSON: true })}
     </script>

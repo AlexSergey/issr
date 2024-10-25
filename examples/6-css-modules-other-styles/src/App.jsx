@@ -1,4 +1,4 @@
-import { Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 import styles from './styles.module.scss';
 import './styles.css';
@@ -38,9 +38,17 @@ const Secondary = () => (
   </>
 );
 
-export const App = () => (
-  <Switch>
-    <Route path="/secondary" component={Secondary} />
-    <Route path="/" component={Home} exact />
-  </Switch>
-);
+export const routes = [
+  {
+    children: [
+      {
+        element: <Secondary />,
+        path: '/secondary',
+      },
+      {
+        element: <Home />,
+        path: '/',
+      },
+    ],
+  },
+];
