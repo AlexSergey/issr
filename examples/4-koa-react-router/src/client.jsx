@@ -11,5 +11,5 @@ hydrateRoot(
   document.getElementById('root'),
   <SSR>
     <RouterProvider router={router} />
-  </SSR>
+  </SSR>,
 );

@@ -1,24 +1,28 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { requestImage, requestImageSuccess, requestImageError } from './action';
 
-export default createReducer({
-  url: '',
-  loading: false,
-  error: false,
-}, {
-  [requestImage.type]: () => ({
-    url: '',
-    loading: true,
+import { requestImage, requestImageError, requestImageSuccess } from './action';
+
+export default createReducer(
+  {
     error: false,
-  }),
-  [requestImageSuccess.type]: (state, { payload }) => ({
-    url: payload.url,
     loading: false,
-    error: false,
-  }),
-  [requestImageError.type]: () => ({
     url: '',
-    loading: false,
-    error: true,
-  })
-});
+  },
+  {
+    [requestImage.type]: () => ({
+      error: false,
+      loading: true,
+      url: '',
+    }),
+    [requestImageError.type]: () => ({
+      error: true,
+      loading: false,
+      url: '',
+    }),
+    [requestImageSuccess.type]: (state, { payload }) => ({
+      error: false,
+      loading: false,
+      url: payload.url,
+    }),
+  },
+);

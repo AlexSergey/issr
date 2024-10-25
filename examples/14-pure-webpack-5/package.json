@@ -1,0 +1,34 @@
+{
+  "name": "@issr/example-17",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack",
+    "format": "npm run format:package && npm run format:prettier && npm run format:code",
+    "format:code": "eslint . --fix",
+    "format:package": "sort-package-json",
+    "format:prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "lint": "npm run lint:code",
+    "lint:code": "eslint .",
+    "lint:ts": "tsc --noEmit",
+    "start": "webpack -w --mode development"
+  },
+  "dependencies": {
+    "@issr/core": "2.3.0",
+    "koa": "2.15.3",
+    "koa-router": "13.0.1",
+    "koa-static": "5.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "serialize-javascript": "6.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.0",
+    "@babel/preset-react": "7.25.9",
+    "@issr/babel-plugin": "2.3.0",
+    "@rockpack/codestyle": "4.5.2",
+    "babel-loader": "9.2.1",
+    "nodemon-webpack-plugin": "4.8.2",
+    "webpack": "5.95.0",
+    "webpack-cli": "4.10.0"
+  }
+}

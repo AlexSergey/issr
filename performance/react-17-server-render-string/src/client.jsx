@@ -1,13 +1,12 @@
-import React from 'react';
-import { hydrate } from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
 import { App } from './App';
 import createSsr from '@issr/core';
 
 const SSR = createSsr(window.SSR_DATA);
 
-hydrate(
+hydrateRoot(
+  document.getElementById('root'),
   <SSR>
     <App />
-  </SSR>,
-  document.getElementById('root')
+  </SSR>
 );

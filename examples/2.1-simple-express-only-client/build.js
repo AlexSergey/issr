@@ -1,23 +1,22 @@
-const { isomorphicCompiler, backendCompiler, frontendCompiler, getArgs } = require('@rockpack/compiler');
+const { backendCompiler, frontendCompiler, getArgs, isomorphicCompiler } = require('@rockpack/compiler');
 
 if (getArgs().client) {
   frontendCompiler({
-    src: 'src/client.jsx',
-    global: {
-      client: true
-    },
     dist: 'public',
+    global: {
+      client: true,
+    },
+    src: 'src/client.jsx',
   });
 } else {
   isomorphicCompiler(
     frontendCompiler({
-      src: 'src/client.jsx',
       dist: 'public',
+      src: 'src/client.jsx',
     }),
     backendCompiler({
-      src: 'src/server.jsx',
       dist: 'dist',
-    })
+      src: 'src/server.jsx',
+    }),
   );
-
 }

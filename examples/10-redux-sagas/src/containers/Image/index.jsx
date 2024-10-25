@@ -14,13 +14,15 @@ const Image = () => {
 
   return (
     <div>
-      {image.loading ?
-        <p>Loading...</p> : image.error ?
-          <p>Error, try again</p> : (
-            <p>
-              <img width="200px" alt="random" src={image.url} />
-            </p>
-          )}
+      {image.loading ? (
+        <p>Loading...</p>
+      ) : image.error ? (
+        <p>Error, try again</p>
+      ) : (
+        <p>
+          <img width="200px" alt="random" src={image.url} />
+        </p>
+      )}
     </div>
   );
 };

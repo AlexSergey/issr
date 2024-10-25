@@ -1,7 +1,7 @@
 import { hydrateRoot } from 'react-dom/client';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import {routes } from './App';
+import { routes } from './App';
 import { createSsr } from '@issr/core';
 
 const SSR = createSsr(window.SSR_DATA);
@@ -14,5 +14,5 @@ hydrateRoot(
     <HelmetProvider>
       <RouterProvider router={router} />
     </HelmetProvider>
-  </SSR>
+  </SSR>,
 );

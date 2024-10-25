@@ -17,20 +17,23 @@ app.use(serve(path.resolve(__dirname, '../public')));
 
 router.get(/.*/, async (ctx) => {
   const { store, rootSaga } = createStore({
-    initState: { },
-    rest
+    initState: {},
+    rest,
   });
 
-  const { html } = await serverRender.string(() => (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  ), {
-    outsideEffects: async () => {
-      store.dispatch(END);
-      await rootSaga.toPromise();
-    }
-  });
+  const { html } = await serverRender.string(
+    () => (
+      <Provider store={store}>
+        <App />
+      </Provider>
+    ),
+    {
+      outsideEffects: async () => {
+        store.dispatch(END);
+        await rootSaga.toPromise();
+      },
+    },
+  );
 
   ctx.body = `
   <!DOCTYPE html>
@@ -50,9 +53,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

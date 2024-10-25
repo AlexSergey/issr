@@ -33,9 +33,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);
@@ -54,12 +52,12 @@ async function terminate(signal) {
 
 server.once('error', handleError);
 
-['unhandledRejection', 'uncaughtException'].forEach(error => {
+['unhandledRejection', 'uncaughtException'].forEach((error) => {
   process.on(error, (error) => {
     console.log(pe.render(error));
   });
 });
 
-['SIGTERM', 'SIGINT', 'SIGUSR2'].forEach(signal => {
+['SIGTERM', 'SIGINT', 'SIGUSR2'].forEach((signal) => {
   process.once(signal, () => terminate(signal));
 });

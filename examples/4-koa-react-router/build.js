@@ -1,16 +1,14 @@
+const { backendCompiler, frontendCompiler, isomorphicCompiler } = require('@rockpack/compiler');
 const path = require('path');
-const { isomorphicCompiler, backendCompiler, frontendCompiler } = require('@rockpack/compiler');
 
 isomorphicCompiler(
   backendCompiler({
-    src: 'src/server.jsx',
     dist: 'dist',
+    src: 'src/server.jsx',
   }),
   frontendCompiler({
-    src: 'src/client.jsx',
+    copy: [{ from: path.resolve(__dirname, './src/assets/favicon.ico'), to: './' }],
     dist: 'public',
-    copy: [
-      { from: path.resolve(__dirname, './src/assets/favicon.ico'), to: './' }
-    ]
-  })
+    src: 'src/client.jsx',
+  }),
 );

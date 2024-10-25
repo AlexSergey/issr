@@ -32,9 +32,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

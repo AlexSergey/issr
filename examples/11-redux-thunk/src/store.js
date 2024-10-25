@@ -1,7 +1,8 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
+
 import imageReducer from './containers/Image/reducer';
-import { isProduction, isNotProduction } from './utils/mode';
+import { isNotProduction, isProduction } from './utils/mode';
 
 export default ({ initState = {} } = {}) => {
   const middleware = getDefaultMiddleware({
@@ -11,15 +12,12 @@ export default ({ initState = {} } = {}) => {
   });
 
   const store = configureStore({
-    reducer: {
-      imageReducer
-    },
     devTools: isNotProduction(),
-    middleware: isProduction() ? middleware.concat([
-    ]) : middleware.concat([
-      logger
-    ]),
-    preloadedState: initState
+    middleware: isProduction() ? middleware.concat([]) : middleware.concat([logger]),
+    preloadedState: initState,
+    reducer: {
+      imageReducer,
+    },
   });
 
   return { store };

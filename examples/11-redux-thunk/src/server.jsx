@@ -13,9 +13,9 @@ const router = new Router();
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
-router.get('/*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   const { store } = createStore({
-    initState: { }
+    initState: {},
   });
 
   const { html } = await serverRender.string(() => (
@@ -24,7 +24,7 @@ router.get('/*', async (ctx) => {
     </Provider>
   ));
   setTimeout(() => {
-    console.log('after', store.getState())
+    console.log('after', store.getState());
   });
   ctx.body = `
   <!DOCTYPE html>
@@ -44,9 +44,7 @@ router.get('/*', async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

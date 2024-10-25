@@ -1,34 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const imageSlice = createSlice({
-  name: 'image',
   initialState: {
-    url: '',
-    loading: false,
     error: false,
+    loading: false,
+    url: '',
   },
-  selectors: {
-    getImage: (state) => state,
-  },
+  name: 'image',
   reducers: {
     requestImage(state) {
       state.url = '';
       state.loading = true;
       state.error = false;
     },
+    requestImageError(state, { payload }) {
+      state.url = '';
+      state.loading = false;
+      state.error = true;
+    },
     requestImageSuccess(state, { payload }) {
       state.url = payload.url;
       state.loading = false;
       state.error = false;
     },
-    requestImageError(state, {payload}) {
-      state.url = '';
-      state.loading = false;
-      state.error = true;
-    },
-  }
+  },
+  selectors: {
+    getImage: (state) => state,
+  },
 });
 
-export const {requestImage, requestImageSuccess, requestImageError} = imageSlice.actions;
-export const { getImage} = imageSlice.selectors;
+export const { requestImage, requestImageError, requestImageSuccess } = imageSlice.actions;
+export const { getImage } = imageSlice.selectors;
 export default imageSlice.reducer;

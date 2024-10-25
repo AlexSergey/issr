@@ -6,10 +6,10 @@
     "stream": "node scripts.seo.check.js --type stream"
   },
   "dependencies": {
-    "lighthouse": "9.6.5",
-    "puppeteer": "16.1.0",
-    "chrome-launcher": "0.15.1",
+    "lighthouse": "12.2.1",
+    "puppeteer": "19.11.1",
+    "chrome-launcher": "1.1.2",
     "request": "2.88.2",
-    "yargs": "17.5.1"
+    "yargs": "17.7.2"
   }
 }

@@ -1,18 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
+import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { fork } from 'redux-saga/effects';
-import logger from 'redux-logger';
-import imageReducer from './containers/Image/slice';
+
 import watchFetchImage from './containers/Image/saga';
-import { isProduction, isNotProduction } from './utils/mode';
+import imageReducer from './containers/Image/slice';
+import { isNotProduction, isProduction } from './utils/mode';
 
 export default ({ initState = {}, rest } = {}) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const store = configureStore({
-    reducer: {
-      image: imageReducer
-    },
     devTools: isNotProduction(),
     middleware: (getDefaultMiddleware) => {
       const middleware = getDefaultMiddleware({
@@ -21,14 +19,12 @@ export default ({ initState = {}, rest } = {}) => {
         thunk: false,
       });
 
-      return isProduction() ? middleware.concat([
-        sagaMiddleware
-      ]) : middleware.concat([
-        logger,
-        sagaMiddleware
-      ]);
+      return isProduction() ? middleware.concat([sagaMiddleware]) : middleware.concat([logger, sagaMiddleware]);
     },
-    preloadedState: initState
+    preloadedState: initState,
+    reducer: {
+      image: imageReducer,
+    },
   });
 
   function* sagas() {
@@ -37,5 +33,5 @@ export default ({ initState = {}, rest } = {}) => {
 
   const rootSaga = sagaMiddleware.run(sagas);
 
-  return { store, rootSaga };
+  return { rootSaga, store };
 };

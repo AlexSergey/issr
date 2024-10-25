@@ -1,4 +1,4 @@
-import {hydrateRoot} from 'react-dom/client';
+import { hydrateRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { App } from './App';
 import { createSsr } from '@issr/core';
@@ -9,7 +9,7 @@ const SSR = createSsr();
 
 const { store } = createStore({
   rest,
-  initState: window.REDUX_DATA
+  initState: window.REDUX_DATA,
 });
 
 hydrateRoot(
@@ -18,5 +18,5 @@ hydrateRoot(
     <Provider store={store}>
       <App />
     </Provider>
-  </SSR>
+  </SSR>,
 );

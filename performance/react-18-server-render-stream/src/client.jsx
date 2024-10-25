@@ -4,7 +4,6 @@ import createSsr from '@issr/core';
 
 document.addEventListener('DOMContentLoaded', () => {
   const SSR = createSsr(window.SSR_DATA);
-
   const container = document.getElementById('app');
 
   hydrateRoot(container, (

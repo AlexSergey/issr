@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 
 import Html from './Html';

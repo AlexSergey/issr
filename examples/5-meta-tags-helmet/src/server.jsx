@@ -6,8 +6,8 @@ import serialize from 'serialize-javascript';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { serverRender } from '@issr/core';
-import {createStaticHandler, createStaticRouter, StaticRouterProvider} from 'react-router-dom/server';
-import {routes} from './App';
+import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
+import { routes } from './App';
 
 const app = new Koa();
 const router = new Router();
@@ -47,7 +47,7 @@ function createFetchRequest(ctx, req) {
 }
 
 router.get(/.*/, async (ctx) => {
-  const {dataRoutes, query} = createStaticHandler(routes);
+  const { dataRoutes, query } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(ctx, ctx.request);
   const context = await query(fetchRequest);
 
@@ -80,9 +80,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

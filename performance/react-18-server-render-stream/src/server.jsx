@@ -14,7 +14,7 @@ const router = new Router();
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
-router.get('/*', async (ctx) => {
+router.get(/.*/, async (ctx) => {
   ctx.respond = false;
   ctx.res.statusCode = 200;
   ctx.response.set('content-type', 'text/html');

@@ -1,18 +1,20 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+
 import { fetchImage } from './action';
-import { requestImage, requestImageSuccess, requestImageError } from './slice';
+import { requestImage, requestImageError, requestImageSuccess } from './slice';
 
 function* watchFetchImage(rest) {
   yield takeEvery(fetchImage, fetchImageAsync, rest);
 }
 
-const callApi = () => (
-  new Promise(resolve => {
+const callApi = () =>
+  new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Large_breaking_wave.jpg/800px-Large_breaking_wave.jpg' });
+      resolve({
+        url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Large_breaking_wave.jpg/800px-Large_breaking_wave.jpg',
+      });
     }, 500);
-  })
-)
+  });
 
 function* fetchImageAsync(rest) {
   try {

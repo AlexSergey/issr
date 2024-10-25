@@ -6,17 +6,15 @@ import Router from 'koa-router';
 import serialize from 'serialize-javascript';
 import { ChunkExtractor } from '@loadable/server';
 import { serverRender } from '@issr/core';
-import {createStaticHandler, createStaticRouter, StaticRouterProvider} from 'react-router-dom/server';
-import {routes} from './App';
+import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
+import { routes } from './App';
 
 const app = new Koa();
 const router = new Router();
 
 const publicFolder = path.resolve(__dirname, '../public');
 
-const stats = JSON.parse(
-  readFileSync(path.resolve(publicFolder, './stats.json'), 'utf8')
-);
+const stats = JSON.parse(readFileSync(path.resolve(publicFolder, './stats.json'), 'utf8'));
 
 app.use(serve(publicFolder));
 
@@ -53,7 +51,7 @@ function createFetchRequest(ctx, req) {
 }
 
 router.get(/.*/, async (ctx) => {
-  const {dataRoutes, query} = createStaticHandler(routes);
+  const { dataRoutes, query } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(ctx, ctx.request);
   const context = await query(fetchRequest);
 
@@ -61,14 +59,12 @@ router.get(/.*/, async (ctx) => {
 
   const extractor = new ChunkExtractor({
     stats,
-    entrypoints: ['index']
+    entrypoints: ['index'],
   });
 
-  const { html, state } = await serverRender.string(() => (
-    extractor.collectChunks(
-      <StaticRouterProvider context={context} router={router} />
-    )
-  ));
+  const { html, state } = await serverRender.string(() =>
+    extractor.collectChunks(<StaticRouterProvider context={context} router={router} />),
+  );
   const scriptTags = extractor.getScriptTags();
 
   ctx.body = `
@@ -87,9 +83,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

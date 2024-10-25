@@ -7,7 +7,7 @@ export const App = () => {
   const registerEffect = useRegisterEffect();
 
   useSsrEffect(() => {
-    registerEffect(asyncFn).then(data => {
+    registerEffect(asyncFn).then((data) => {
       setState(data);
     });
   }, []);

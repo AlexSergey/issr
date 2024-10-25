@@ -4,7 +4,7 @@ import serve from 'koa-static';
 import Router from 'koa-router';
 import { routes } from './App';
 import serialize from 'serialize-javascript';
-import {createStaticHandler, createStaticRouter, StaticRouterProvider} from 'react-router-dom/server';
+import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 import { serverRender } from '@issr/core';
 
 const app = new Koa();
@@ -45,15 +45,13 @@ function createFetchRequest(ctx, req) {
 }
 
 router.get(/.*/, async (ctx) => {
-  const {dataRoutes, query} = createStaticHandler(routes);
+  const { dataRoutes, query } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(ctx, ctx.request);
   const context = await query(fetchRequest);
 
   const router = createStaticRouter(dataRoutes, context);
 
-  const { html, state } = await serverRender.string(() => (
-    <StaticRouterProvider context={context} router={router} />
-  ));
+  const { html, state } = await serverRender.string(() => <StaticRouterProvider context={context} router={router} />);
   ctx.body = `
   <!DOCTYPE html>
 <html lang="en">
@@ -72,9 +70,7 @@ router.get(/.*/, async (ctx) => {
 `;
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(4000, () => {
   console.log(`Server is listening ${4000} port`);

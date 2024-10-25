@@ -13,13 +13,13 @@ if (rootElement.hasChildNodes()) {
     <SSR>
       <App />
     </SSR>,
-    rootElement
+    rootElement,
   );
 } else {
   render(
     <SSR>
       <App />
     </SSR>,
-    rootElement
+    rootElement,
   );
 }

@@ -1,8 +1,8 @@
 {
   "name": "frontendCompiler",
-  "hash": "eeaaa90be915ab22f1b0",
+  "hash": "b9c11a4dd0874d1f897e",
   "publicPath": "/",
-  "outputPath": "/Users/serhii_aleksandrov/Desktop/Projects/my/github/issr/performance/react-17-server-render-string/public",
+  "outputPath": "/Users/serhiialeksandrov/Desktop/Work/Projects/my/github/issr/performance/react-17-server-render-string/public",
   "assetsByChunkName": {
     "index": [
       "index.js"
@@ -12,7 +12,7 @@
     {
       "type": "asset",
       "name": "index.js",
-      "size": 155929,
+      "size": 217375,
       "emitted": false,
       "comparedForEmit": false,
       "cached": true,

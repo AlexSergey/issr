@@ -8,5 +8,5 @@ hydrateRoot(
   document.getElementById('root'),
   <SSR>
     <App />
-  </SSR>
+  </SSR>,
 );

@@ -8,7 +8,7 @@ const App = ({ children }) => {
   const registerEffect = useRegisterEffect();
 
   useSsrEffect(() => {
-    registerEffect(asyncFn).then(data => {
+    registerEffect(asyncFn).then((data) => {
       setState(data);
     });
   }, []);
@@ -29,10 +29,8 @@ const root2 = createRoot(document.getElementById('root2'));
 
   root.render(
     <SSR>
-      <App>
-        {setState => <button onClick={() => setState('Hello world 2')}>Click</button>}
-      </App>
-    </SSR>
+      <App>{(setState) => <button onClick={() => setState('Hello world 2')}>Click</button>}</App>
+    </SSR>,
   );
 
   await SSR.effectCollection.runEffects();
@@ -41,6 +39,6 @@ const root2 = createRoot(document.getElementById('root2'));
   root2.render(
     <SSR2>
       <App />
-    </SSR2>
+    </SSR2>,
   );
 })();
