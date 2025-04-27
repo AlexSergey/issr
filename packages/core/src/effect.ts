@@ -16,6 +16,18 @@ class Effect {
 
   private status: Statuses;
 
+  constructor({ id }: IEffectOptions) {
+    this.id = id;
+    this.status = Statuses.wait;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addCallback(cb: any): void {
+    if (this.status === Statuses.wait) {
+      this.callback = cb;
+    }
+  }
+
   done = (): void => {
     this.status = Statuses.done;
   };
@@ -30,18 +42,6 @@ class Effect {
   getId = (): string => this.id;
 
   getStatus = (): Statuses => this.status;
-
-  constructor({ id }: IEffectOptions) {
-    this.id = id;
-    this.status = Statuses.wait;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  addCallback(cb: any): void {
-    if (this.status === Statuses.wait) {
-      this.callback = cb;
-    }
-  }
 }
 
 export { Effect };

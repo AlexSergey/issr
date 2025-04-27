@@ -7,14 +7,7 @@ export type IInitState = Record<string, unknown>;
 
 export type IState = Record<string, unknown>;
 
-interface IOptions {
-  onlyClient?: boolean;
-}
-
-interface IReturnCreateIssr<P> extends FunctionComponent<P> {
-  effectCollection: EffectCollection;
-  getState: () => IState;
-}
+type ExcludeFn = (...args: unknown[]) => JSX.Element;
 
 interface IIssrContext {
   effectCollection: EffectCollection;
@@ -25,7 +18,14 @@ interface IIssrContext {
   setEffectCalledState: (id: string) => void;
 }
 
-type ExcludeFn = (...args: unknown[]) => JSX.Element;
+interface IOptions {
+  onlyClient?: boolean;
+}
+
+interface IReturnCreateIssr<P> extends FunctionComponent<P> {
+  effectCollection: EffectCollection;
+  getState: () => IState;
+}
 
 export const IssrContext = createContext<IIssrContext>({} as IIssrContext);
 

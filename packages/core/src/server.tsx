@@ -3,11 +3,11 @@ import ReactDOMServer, { PipeableStream, RenderToPipeableStreamOptions } from 'r
 
 import { createSsr, IInitState } from './i-ssr';
 
-type IState = Record<string, unknown>;
-
-interface IServerRenderResultString {
-  html: string;
-  state: IState;
+interface IServerRenderOptions<T> {
+  cachedState?: IInitState;
+  outsideEffects?: T;
+  streamOptions?: RenderToPipeableStreamOptions;
+  streamOptionsFn?: (state: IState) => RenderToPipeableStreamOptions;
 }
 
 interface IServerRenderResultStream {
@@ -15,12 +15,12 @@ interface IServerRenderResultStream {
   stream: PipeableStream;
 }
 
-interface IServerRenderOptions<T> {
-  cachedState?: IInitState;
-  outsideEffects?: T;
-  streamOptions?: RenderToPipeableStreamOptions;
-  streamOptionsFn?: (state: IState) => RenderToPipeableStreamOptions;
+interface IServerRenderResultString {
+  html: string;
+  state: IState;
 }
+
+type IState = Record<string, unknown>;
 
 export const serverRender = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

@@ -3,6 +3,10 @@ import { Effect, Statuses } from './effect';
 export class EffectCollection {
   private effects: Map<string, Effect>;
 
+  constructor() {
+    this.effects = new Map();
+  }
+
   addEffect = (effect: Effect): void => {
     this.effects.set(effect.getId(), effect);
   };
@@ -42,8 +46,4 @@ export class EffectCollection {
       });
     }
   };
-
-  constructor() {
-    this.effects = new Map();
-  }
 }
