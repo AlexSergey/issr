@@ -2,7 +2,6 @@
   "name": "react-17-server-render-string",
   "version": "1.0.0",
   "scripts": {
-    "start": "cross-env NODE_ENV=development node build",
     "build": "cross-env NODE_ENV=production node build",
     "format": "npm run format:package && npm run format:prettier && npm run format:code",
     "format:code": "eslint . --fix",
@@ -10,7 +9,8 @@
     "format:prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "npm run lint:code",
     "lint:code": "eslint .",
-    "lint:ts": "tsc --noEmit"
+    "lint:ts": "tsc --noEmit",
+    "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
     "@issr/core": "2.3.0",

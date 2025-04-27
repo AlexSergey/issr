@@ -16,5 +16,5 @@ hydrateRoot(
     <Provider store={store}>
       <App />
     </Provider>
-  </SSR>
+  </SSR>,
 );

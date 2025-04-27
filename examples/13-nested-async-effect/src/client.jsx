@@ -1,4 +1,4 @@
-import {hydrateRoot} from 'react-dom/client';
+import { hydrateRoot } from 'react-dom/client';
 import { App } from './App';
 import { createSsr } from '@issr/core';
 
@@ -8,5 +8,5 @@ hydrateRoot(
   document.getElementById('root'),
   <SSR>
     <App />
-  </SSR>
+  </SSR>,
 );

@@ -1,12 +1,12 @@
-const { isomorphicCompiler, backendCompiler, frontendCompiler } = require('@rockpack/compiler');
+const { backendCompiler, frontendCompiler, isomorphicCompiler } = require('@rockpack/compiler');
 
 isomorphicCompiler(
   backendCompiler({
-    src: 'src/server.jsx',
     dist: 'dist',
+    src: 'src/server.jsx',
   }),
   frontendCompiler({
-    src: 'src/client.jsx',
     dist: 'public',
-  })
+    src: 'src/client.jsx',
+  }),
 );

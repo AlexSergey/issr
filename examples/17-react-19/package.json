@@ -1,5 +1,5 @@
 {
-  "name": "@issr/example-19",
+  "name": "@issr/example-20",
   "version": "1.0.0",
   "scripts": {
     "build": "cross-env NODE_ENV=production node build",
@@ -17,8 +17,8 @@
     "koa": "2.15.3",
     "koa-router": "13.0.1",
     "koa-static": "5.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "serialize-javascript": "6.0.2",
     "stream-concat": "2.0.0"
   },

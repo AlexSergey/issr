@@ -1,6 +1,6 @@
 {
   "name": "@issr/core",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "private": false,
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",
   "keywords": [
@@ -39,15 +39,11 @@
     "typing": "cross-env NODE_ENV=production tsc -p . --noEmit"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "4.5.2",
-    "@rockpack/compiler": "4.5.2",
-    "@rockpack/tester": "4.5.2",
-    "@rockpack/tsconfig": "4.5.2",
-    "@types/jest": "26.0.12",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "@rockpack/codestyle": "5.0.1",
+    "@rockpack/compiler": "5.0.1",
+    "@rockpack/tester": "5.0.1",
+    "@rockpack/tsconfig": "5.0.1",
+    "@types/jest": "26.0.12"
   },
   "peerDependencies": {
     "react": ">=18",

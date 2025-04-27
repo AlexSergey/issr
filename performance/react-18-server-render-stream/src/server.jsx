@@ -22,16 +22,14 @@ router.get(/.*/, async (ctx) => {
   const { stream } = await serverRender.stream(() => <App />, {
     streamOptionsFn: (state) => ({
       bootstrapScripts: ['/index.js'],
-      bootstrapScriptContent: `window.SSR_DATA = ${serialize(state, { isJSON: true })}`
-    })
+      bootstrapScriptContent: `window.SSR_DATA = ${serialize(state, { isJSON: true })}`,
+    }),
   });
 
   stream.pipe(ctx.res);
 });
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods());
 
 const server = app.listen(2999, () => {
   console.log(`Server is listening ${2999} port`);

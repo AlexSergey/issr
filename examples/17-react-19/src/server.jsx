@@ -1,5 +1,4 @@
-import path from 'path';
-import React from 'react';
+import path from 'node:path';
 import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
@@ -9,11 +8,18 @@ import { serverRender } from '@issr/core';
 
 const app = new Koa();
 const router = new Router();
+const ABORT_DELAY = 10000;
 
 app.use(serve(path.resolve(__dirname, '../public')));
 
 router.get(/.*/, async (ctx) => {
-  const { html, state } = await serverRender.string(() => <App />);
+  let didError = false;
+
+  /**
+   * NOTE: use promise to force koa waiting for streaming.
+   */
+  const {html, state} = await serverRender.string(() => <App />);
+  console.log(html);
   ctx.body = `
   <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +27,7 @@ router.get(/.*/, async (ctx) => {
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
-      window.SSR_DATA = ${serialize(state, { isJSON: true })}
+      window.SSR_DATA = ${serialize(state, {isJSON: true})}
     </script>
 </head>
 <body>
@@ -34,6 +40,6 @@ router.get(/.*/, async (ctx) => {
 
 app.use(router.routes()).use(router.allowedMethods());
 
-const server = app.listen(2998, () => {
-  console.log(`Server is listening ${2998} port`);
+const server = app.listen(4000, () => {
+  console.log(`Server is listening ${4000} port`);
 });

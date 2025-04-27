@@ -19,8 +19,8 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "4.5.2",
-    "@rockpack/compiler": "4.5.2",
+    "@rockpack/codestyle": "5.0.1",
+    "@rockpack/compiler": "5.0.1",
     "@types/lodash": "^4.17.12"
   }
 }

@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
-
-import Html from './Html';
 
 const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world'), 1000));
 
-const AppComponent = () => {
+export const App = () => {
+  const [s, setS] = useState('');
   const [state, setState] = useSsrState('i am test ');
   const registerEffect = useRegisterEffect();
 
@@ -12,17 +12,13 @@ const AppComponent = () => {
     registerEffect(asyncFn).then((data) => {
       setState(data);
     });
-  }, []);
+  }, [s]);
 
   return (
     <div>
-      <h1>{state}</h1>
+      <h1>{state} 2</h1>
+      <p>{s}</p>
+      <input type="text" onChange={(e) => setS(e.target.value)} />
     </div>
   );
 };
-
-export const App = () => (
-  <Html title="React SSR Demo">
-    <AppComponent />
-  </Html>
-);

@@ -25,7 +25,7 @@
     "@babel/core": "7.26.0",
     "@babel/preset-react": "7.25.9",
     "@issr/babel-plugin": "2.3.0",
-    "@rockpack/codestyle": "4.5.2",
+    "@rockpack/codestyle": "5.0.1",
     "babel-loader": "9.2.1",
     "nodemon-webpack-plugin": "4.8.2",
     "webpack": "5.95.0",
