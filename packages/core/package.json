@@ -1,6 +1,6 @@
 {
   "name": "@issr/core",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": false,
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",
   "keywords": [
@@ -22,7 +22,7 @@
   "license": "MIT",
   "author": "Aleksandrov Sergey <gooddev.sergey@gmail.com> (https://github.com/AlexSergey/issr)",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "cross-env NODE_ENV=production node build",
     "format": "npm run format:package && npm run format:prettier && npm run format:code",
@@ -39,11 +39,13 @@
     "typing": "cross-env NODE_ENV=production tsc -p . --noEmit"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "5.0.1",
-    "@rockpack/compiler": "5.0.1",
-    "@rockpack/tester": "5.0.1",
-    "@rockpack/tsconfig": "5.0.1",
-    "@types/jest": "26.0.12"
+    "@rockpack/codestyle": "5.0.2",
+    "@rockpack/compiler": "5.0.2",
+    "@rockpack/tester": "5.0.2",
+    "@rockpack/tsconfig": "5.0.2",
+    "@types/jest": "26.0.12",
+    "@types/react": "18.3.20",
+    "@types/react-dom": "18.3.1"
   },
   "peerDependencies": {
     "react": ">=18",

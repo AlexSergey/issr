@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
-    "@issr/core": "2.3.0",
+    "@issr/core": "2.4.0",
     "@reduxjs/toolkit": "2.3.0",
     "axios": "1.7.7",
     "immutable": "4.3.7",
@@ -28,8 +28,8 @@
     "serialize-javascript": "6.0.2"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "2.3.0",
-    "@rockpack/codestyle": "5.0.1",
-    "@rockpack/compiler": "5.0.1"
+    "@issr/babel-plugin": "2.4.0",
+    "@rockpack/codestyle": "5.0.2",
+    "@rockpack/compiler": "5.0.2"
   }
 }

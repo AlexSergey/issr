@@ -19,7 +19,7 @@ router.get(/.*/, async (ctx) => {
    * NOTE: use promise to force koa waiting for streaming.
    */
   const {html, state} = await serverRender.string(() => <App />);
-  console.log(html);
+
   ctx.body = `
   <!DOCTYPE html>
 <html lang="en">

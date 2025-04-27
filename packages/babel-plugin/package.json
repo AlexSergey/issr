@@ -1,6 +1,6 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": false,
   "description": "Babel plugin for iSSR",
   "keywords": [
@@ -35,6 +35,6 @@
     "md5": "2.3.0"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "5.0.1"
+    "@rockpack/codestyle": "5.0.2"
   }
 }

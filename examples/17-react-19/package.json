@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
-    "@issr/core": "2.3.0",
+    "@issr/core": "2.4.0",
     "koa": "2.15.3",
     "koa-router": "13.0.1",
     "koa-static": "5.0.0",
@@ -23,8 +23,8 @@
     "stream-concat": "2.0.0"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "2.3.0",
-    "@rockpack/codestyle": "5.0.1",
-    "@rockpack/compiler": "5.0.1"
+    "@issr/babel-plugin": "2.4.0",
+    "@rockpack/codestyle": "5.0.2",
+    "@rockpack/compiler": "5.0.2"
   }
 }
