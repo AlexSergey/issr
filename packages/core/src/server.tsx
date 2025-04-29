@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { ReactNode } from 'react';
 import ReactDOMServer, { PipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
 
 import { createSsr, IInitState } from './i-ssr';
@@ -25,7 +25,7 @@ type IState = Record<string, unknown>;
 export const serverRender = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   stream: async <T extends Function>(
-    iteration: (count?: number) => JSX.Element,
+    iteration: (count?: number) => ReactNode,
     opts?: IServerRenderOptions<T>,
   ): Promise<IServerRenderResultStream> => {
     if (typeof ReactDOMServer.renderToPipeableStream === 'undefined') {
@@ -33,7 +33,7 @@ export const serverRender = {
     }
     const SSR = createSsr(opts?.cachedState);
 
-    const renderStream = (App: JSX.Element): PipeableStream =>
+    const renderStream = (App: ReactNode): PipeableStream =>
       ReactDOMServer.renderToPipeableStream(
         <SSR>{App}</SSR>,
         typeof opts?.streamOptionsFn === 'function' ? opts?.streamOptionsFn(SSR.getState()) : opts?.streamOptions,
@@ -76,7 +76,7 @@ export const serverRender = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   string: async <T extends Function>(
-    iteration: (count?: number) => JSX.Element,
+    iteration: (count?: number) => ReactNode,
     opts?: IServerRenderOptions<T>,
   ): Promise<IServerRenderResultString> => {
     const SSR = createSsr(opts?.cachedState);

@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { JSX } from 'react';
+import { ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
 
 import { useRegisterEffect, useSsrEffect, useSsrState } from './hooks';
@@ -30,7 +30,7 @@ describe('hooks tests', () => {
         }, 500);
       });
 
-    const App = (): JSX.Element | null => {
+    const App = (): ReactNode => {
       const registerEffect = useRegisterEffect('effect-0');
       useSsrEffect(
         () => {
@@ -67,7 +67,7 @@ describe('hooks tests', () => {
         }, 500);
       });
 
-    const App = (): JSX.Element | null => {
+    const App = (): ReactNode => {
       const registerEffect = useRegisterEffect('effect-0');
 
       useSsrEffect(
@@ -105,7 +105,7 @@ describe('hooks tests', () => {
         }, 500);
       });
 
-    const App = (): JSX.Element | null => {
+    const App = (): ReactNode => {
       const registerEffect = useRegisterEffect('effect-0');
 
       useSsrEffect(
@@ -137,7 +137,7 @@ describe('hooks tests', () => {
       'custom-id': 'bar',
     });
 
-    const App = (): JSX.Element => {
+    const App = (): ReactNode => {
       const [state] = useSsrState('', 'custom-id');
 
       return <div>{state}</div>;
@@ -155,7 +155,7 @@ describe('hooks tests', () => {
   test('useSsrState - use setState isomorphic', async () => {
     const SSR = createSsr();
 
-    const App = (): JSX.Element => {
+    const App = (): ReactNode => {
       const [state, setState] = useSsrState('', 'state-0');
       const registerEffect = useRegisterEffect('effect-0');
 
@@ -198,7 +198,7 @@ describe('hooks tests', () => {
       'state-0': true,
     });
 
-    const App = (): JSX.Element => {
+    const App = (): ReactNode => {
       const [state, setState] = useSsrState(true, 'state-0');
       const registerEffect = useRegisterEffect('effect-0');
 

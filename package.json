@@ -1,6 +1,6 @@
 {
   "name": "issr",
-  "version": "2.4.1",
+  "version": "3.0.0",
   "private": true,
   "license": "MIT",
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",

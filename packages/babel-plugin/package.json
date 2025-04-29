@@ -1,6 +1,6 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "2.4.1",
+  "version": "3.0.0",
   "private": false,
   "description": "Babel plugin for iSSR",
   "keywords": [

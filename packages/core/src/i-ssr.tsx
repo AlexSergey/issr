@@ -1,4 +1,4 @@
-import { createContext, FunctionComponent, isValidElement, JSX, useEffect } from 'react';
+import { createContext, FunctionComponent, isValidElement, ReactNode, useEffect } from 'react';
 
 import { EffectCollection } from './effect-collection';
 import { clone, isBackend } from './utils';
@@ -7,7 +7,7 @@ export type IInitState = Record<string, unknown>;
 
 export type IState = Record<string, unknown>;
 
-type ExcludeFn = (...args: unknown[]) => JSX.Element;
+type ExcludeFn = (...args: unknown[]) => ReactNode;
 
 interface IIssrContext {
   effectCollection: EffectCollection;
@@ -29,7 +29,7 @@ interface IReturnCreateIssr<P> extends FunctionComponent<P> {
 
 export const IssrContext = createContext<IIssrContext>({} as IIssrContext);
 
-export const ExcludeSsr = ({ children }: { children: ExcludeFn | JSX.Element }): JSX.Element | null => {
+export const ExcludeSsr = ({ children }: { children: ExcludeFn | ReactNode }): null | ReactNode => {
   if (isBackend()) {
     return null;
   }
@@ -48,7 +48,7 @@ interface IOnComplete {
   onLoad: (loading: boolean) => void;
 }
 
-const OnComplete = ({ loading, onLoad }: IOnComplete): JSX.Element | null => {
+const OnComplete = ({ loading, onLoad }: IOnComplete): null | ReactNode => {
   useEffect(() => {
     if (!isBackend() && loading) {
       setTimeout(() => onLoad(false));
@@ -67,7 +67,7 @@ interface IApp {
 export const createSsr = (
   initState: IInitState = {},
   options: IOptions = {},
-): IReturnCreateIssr<{ children: JSX.Element }> => {
+): IReturnCreateIssr<{ children: ReactNode }> => {
   const app: IApp = {
     calledState: {},
     loading: options.onlyClient ? false : !isBackend(),
@@ -94,7 +94,7 @@ export const createSsr = (
 
   const getState = (): IState => clone(app.state);
 
-  const iSSR = ({ children }: { children: JSX.Element }): JSX.Element => (
+  const iSSR = ({ children }: { children: ReactNode }): ReactNode => (
     <IssrContext.Provider
       value={{
         effectCollection,
