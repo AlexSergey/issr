@@ -12,6 +12,7 @@ The easiest way to move your React application to Server-Side Rendering. Handles
 
 ## Features
 - TypeScript support
+- React 19 and React-Compiler support
 - Small size (5kb)
 - Without dependencies
 - **iSSR** supports native setState, Redux (thunk, sagas), Mobx, Apollo and other state management libraries

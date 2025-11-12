@@ -1,6 +1,6 @@
 {
   "name": "issr",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "license": "MIT",
   "description": "iSSR the easiest way to move your React application to Server Side Rendering",
@@ -14,19 +14,11 @@
     "format": "lerna run format",
     "typing": "lerna run typing",
     "production": "lerna run production",
-    "test": "lerna run test --stream"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run typing",
-      "pre-push": "npm run lint && npm run typing && npm test"
-    }
-  },
-  "dependencies": {
-    "node-gyp": "9.4.0"
+    "test": "lerna run test --stream",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "lerna": "3.22.1",
-    "husky": "4.2.5"
+    "lerna": "9.0.0",
+    "husky": "9.1.7"
   }
 }

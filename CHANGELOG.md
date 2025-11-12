@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.0]
+
+- React-Compiler support
+
+## [3.0.0]
+
+- React 19 support
+
 ## [2.3.0]
 
 - Refactoring

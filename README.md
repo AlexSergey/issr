@@ -23,6 +23,7 @@ The easiest way to move your React application to Server-Side Rendering. Handles
 
 - **iSSR** supports native setState, Redux (thunk, sagas), Mobx, Apollo and other state management libraries
 - TypeScript support
+- React 19 and React-Compiler support
 - Small size (5kb)
 - No dependencies
 
@@ -187,6 +188,8 @@ module.exports = [
   }
 ];
 ```
+
+If you are using *react-compiler*, *@issr/babel-plugin* must be first.
 
 The main goal is to create 2 applications **client** and **server** with common logic.
 

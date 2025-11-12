@@ -14,15 +14,15 @@
     "start:client": "cross-env NODE_ENV=development node build --client"
   },
   "dependencies": {
-    "@issr/core": "2.4.0",
+    "@issr/core": "4.0.0",
     "express": "4.21.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "serialize-javascript": "6.0.2"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "2.4.0",
-    "@rockpack/codestyle": "5.0.2",
+    "@issr/babel-plugin": "4.0.0",
+    "@rockpack/codestyle": "6.0.5",
     "@rockpack/compiler": "5.0.2"
   }
 }

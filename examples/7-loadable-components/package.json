@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
-    "@issr/core": "2.4.0",
+    "@issr/core": "4.0.0",
     "@loadable/component": "5.16.4",
     "@loadable/server": "5.16.5",
     "koa": "2.15.3",
@@ -26,8 +26,8 @@
     "serialize-javascript": "6.0.2"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "2.4.0",
-    "@rockpack/codestyle": "5.0.2",
+    "@issr/babel-plugin": "4.0.0",
+    "@rockpack/codestyle": "6.0.5",
     "@rockpack/compiler": "5.0.2"
   }
 }

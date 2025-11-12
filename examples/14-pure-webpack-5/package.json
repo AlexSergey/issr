@@ -1,5 +1,5 @@
 {
-  "name": "@issr/example-17",
+  "name": "@issr/example-14",
   "version": "1.0.0",
   "scripts": {
     "build": "webpack",
@@ -13,7 +13,7 @@
     "start": "webpack -w --mode development"
   },
   "dependencies": {
-    "@issr/core": "2.4.0",
+    "@issr/core": "4.0.0",
     "koa": "2.15.3",
     "koa-router": "13.0.1",
     "koa-static": "5.0.0",
@@ -24,8 +24,8 @@
   "devDependencies": {
     "@babel/core": "7.26.0",
     "@babel/preset-react": "7.25.9",
-    "@issr/babel-plugin": "2.4.0",
-    "@rockpack/codestyle": "5.0.2",
+    "@issr/babel-plugin": "4.0.0",
+    "@rockpack/codestyle": "6.0.5",
     "babel-loader": "9.2.1",
     "nodemon-webpack-plugin": "4.8.2",
     "webpack": "5.95.0",

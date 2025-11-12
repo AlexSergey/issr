@@ -1,5 +1,5 @@
 {
-  "name": "@issr/example-20",
+  "name": "@issr/example-17",
   "version": "1.0.0",
   "scripts": {
     "build": "cross-env NODE_ENV=production node build",
@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
-    "@issr/core": "2.4.0",
+    "@issr/core": "4.0.0",
     "koa": "2.15.3",
     "koa-router": "13.0.1",
     "koa-static": "5.0.0",
@@ -23,8 +23,8 @@
     "stream-concat": "2.0.0"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "2.4.0",
-    "@rockpack/codestyle": "5.0.2",
+    "@issr/babel-plugin": "4.0.0",
+    "@rockpack/codestyle": "6.0.5",
     "@rockpack/compiler": "5.0.2"
   }
 }
