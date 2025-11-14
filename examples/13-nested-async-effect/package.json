@@ -1,6 +1,7 @@
 {
   "name": "@issr/example-13",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "build": "cross-env NODE_ENV=production node build",
     "format": "npm run format:package && npm run format:prettier && npm run format:code",
@@ -17,13 +18,11 @@
     "koa": "2.15.3",
     "koa-router": "13.0.1",
     "koa-static": "5.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "serialize-javascript": "6.0.2"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "4.0.0",
-    "@rockpack/codestyle": "6.0.5",
-    "@rockpack/compiler": "5.0.2"
+    "@issr/babel-plugin": "4.0.0"
   }
 }

@@ -31,6 +31,7 @@ describe('hooks tests', () => {
       });
 
     const App = (): ReactNode => {
+      'use no memo';
       const registerEffect = useRegisterEffect('effect-0');
       useSsrEffect(
         () => {
@@ -68,6 +69,7 @@ describe('hooks tests', () => {
       });
 
     const App = (): ReactNode => {
+      'use no memo';
       const registerEffect = useRegisterEffect('effect-0');
 
       useSsrEffect(
@@ -106,6 +108,7 @@ describe('hooks tests', () => {
       });
 
     const App = (): ReactNode => {
+      'use no memo';
       const registerEffect = useRegisterEffect('effect-0');
 
       useSsrEffect(

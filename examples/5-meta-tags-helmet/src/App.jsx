@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { Head } from '@unhead/react';
 import { useSsrState, useSsrEffect, useRegisterEffect } from '@issr/core';
 
 const asyncFn = () => new Promise((resolve) => setTimeout(() => resolve('Hello world'), 1000));
@@ -16,10 +16,10 @@ const Home = () => {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>Home</title>
         <meta name="description" content="Home page" />
-      </Helmet>
+      </Head>
       <div>
         <h1>{state}</h1>
         <Link to="/secondary">secondary</Link>
@@ -30,10 +30,10 @@ const Home = () => {
 
 const Secondary = () => (
   <>
-    <Helmet>
+    <Head>
       <title>Secondary</title>
       <meta name="description" content="Secondary page" />
-    </Helmet>
+    </Head>
     <div>
       <h1>Secondary</h1>
       <Link to="/">Home</Link>

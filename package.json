@@ -18,6 +18,10 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@rockpack/codestyle": "7.0.0",
+    "@rockpack/compiler": "7.0.0",
+    "@rockpack/tester": "7.0.0",
+    "@rockpack/tsconfig": "7.0.0",
     "lerna": "9.0.0",
     "husky": "9.1.7"
   }

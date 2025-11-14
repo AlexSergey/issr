@@ -33,8 +33,5 @@
   },
   "dependencies": {
     "md5": "2.3.0"
-  },
-  "devDependencies": {
-    "@rockpack/codestyle": "6.0.5"
   }
 }

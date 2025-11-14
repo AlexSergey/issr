@@ -3,11 +3,12 @@ import Koa from 'koa';
 import serve from 'koa-static';
 import Router from 'koa-router';
 import serialize from 'serialize-javascript';
-import { HelmetProvider } from 'react-helmet-async';
+import { transformHtmlTemplate } from '@unhead/react/server';
 
 import { serverRender } from '@issr/core';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 import { routes } from './App';
+import { createHead, UnheadProvider } from '@unhead/react/client';
 
 const app = new Koa();
 const router = new Router();
@@ -47,37 +48,38 @@ function createFetchRequest(ctx, req) {
 }
 
 router.get(/.*/, async (ctx) => {
+  const head = createHead();
+
   const { dataRoutes, query } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(ctx, ctx.request);
   const context = await query(fetchRequest);
 
-  const helmetContext = {};
-
   const router = createStaticRouter(dataRoutes, context);
 
   const { html, state } = await serverRender.string(() => (
-    <HelmetProvider context={helmetContext}>
+    <UnheadProvider head={head}>
       <StaticRouterProvider context={context} router={router} />
-    </HelmetProvider>
+    </UnheadProvider>
   ));
 
-  const { helmet } = helmetContext;
-  ctx.body = `
-  <!DOCTYPE html>
+  ctx.body = await transformHtmlTemplate(
+    head,
+    `  <!DOCTYPE html>
 <html lang="en">
 <head>
-    ${helmet.title.toString()}
-    ${helmet.meta.toString()}
-    <script>
-      window.SSR_DATA = ${serialize(state, { isJSON: true })}
-    </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script><!--app-state--></script>
 </head>
 <body>
-    <div id="root">${html}</div>
+    <div id="root"><!--app-html--></div>
     <script src="/index.js"></script>
 </body>
-</html>
-`;
+</html>`
+      .replace(`<!--app-html-->`, html ?? '')
+      .replace('<!--app-state-->', `window.SSR_DATA = ${serialize(state, { isJSON: true })}`),
+  );
 });
 
 app.use(router.routes()).use(router.allowedMethods());

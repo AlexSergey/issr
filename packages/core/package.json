@@ -39,10 +39,6 @@
     "typing": "cross-env NODE_ENV=production tsc -p . --noEmit"
   },
   "devDependencies": {
-    "@rockpack/codestyle": "6.0.5",
-    "@rockpack/compiler": "6.0.5",
-    "@rockpack/tester": "6.0.5",
-    "@rockpack/tsconfig": "6.0.5",
     "@types/jest": "29.5.14",
     "@types/react": "19.2.3",
     "@types/react-dom": "19.2.2"
