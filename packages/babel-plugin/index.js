@@ -83,8 +83,9 @@ const BabelISSRPlugin = (api) => {
                 if (path.node.callee.name === ssrEffectName) {
                   const args = path.node.arguments;
                   const lastItem = args[args.length - 1];
-                  const lastItemIsArray = lastItem.type === 'ArrayExpression';
-                  const firstItemIsFunction = lastItem.type.indexOf('FunctionExpression') >= 0;
+                  const lastItemIsArray = lastItem?.type === 'ArrayExpression';
+                  const firstItemIsFunction =
+                    lastItem?.type === 'Identifier' || lastItem?.type.indexOf('FunctionExpression') >= 0;
 
                   if (
                     (path.node.arguments.length === 2 && lastItemIsArray) ||
