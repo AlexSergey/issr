@@ -1,7 +1,8 @@
-import { createSsr, ExcludeSsr, IInitState } from './i-ssr';
+import { createSsr, ExcludeSsr, SsrScope } from './i-ssr';
 
 export * from './hooks';
+export type { IInitState } from './i-ssr';
 export * from './server';
-export { isBackend, isClient } from './utils';
 
-export { createSsr, ExcludeSsr, IInitState };
+export { createSsr, ExcludeSsr, SsrScope };
+export { isBackend, isClient } from './utils';

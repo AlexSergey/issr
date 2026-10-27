@@ -1,27 +1,17 @@
-const md5 = require('md5');
+const { createHash } = require('node:crypto');
 const pathNode = require('node:path');
 
 function getTarget(caller) {
   return caller && caller.target;
 }
 
-const createDummy = (globalCache, id, field) => {
-  if (!globalCache[id]) {
-    globalCache[id] = {
-      useRegisterEffect: 0,
-      useSsrEffect: 0,
-      useSsrState: 0,
-    };
-  }
+const getNames = (option, defaultName) =>
+  typeof option === 'string' || Array.isArray(option) ? [].concat(option) : [defaultName];
 
-  if (!globalCache[id][field]) {
-    globalCache[id][field] = 0;
-  }
-};
+const isStringId = (node) => node.type === 'StringLiteral' || node.type === 'TemplateLiteral';
 
 const BabelISSRPlugin = (api) => {
   const t = api.types;
-  const globalCache = {};
 
   api.caller(getTarget);
 
@@ -30,74 +20,45 @@ const BabelISSRPlugin = (api) => {
     visitor: {
       Program: {
         enter(prog, data) {
+          const { cwd, filename, opts: options } = data;
+
+          const useRegisterEffectNames = getNames(options.useRegisterEffect, 'useRegisterEffect');
+          const useSsrStateNames = getNames(options.useSsrState, 'useSsrState');
+          const useSsrEffectNames = getNames(options.useSsrEffect, 'useSsrEffect');
+
+          const id = createHash('md5')
+            .update(pathNode.relative(cwd, filename || ''))
+            .digest('hex');
+          // Counters are per file and reset on every transform, so ids stay stable across rebuilds (watch mode, HMR)
+          const counters = {
+            useRegisterEffect: 0,
+            useSsrEffect: 0,
+            useSsrState: 0,
+          };
+
           prog.traverse({
             CallExpression(path) {
-              const { cwd, filename, opts: options } = data;
+              const { name } = path.node.callee;
+              const args = path.node.arguments;
 
-              const useRegisterEffectName =
-                options && (typeof options.useRegisterEffect === 'string' || Array.isArray(options.useRegisterEffect))
-                  ? options.useRegisterEffect
-                  : 'useRegisterEffect';
-
-              const useSsrStateName =
-                options && (typeof options.useSsrState === 'string' || Array.isArray(options.useSsrState))
-                  ? options.useSsrState
-                  : 'useSsrState';
-
-              const useSsrEffectName =
-                options && (typeof options.useSsrEffect === 'string' || Array.isArray(options.useSsrEffect))
-                  ? options.useSsrEffect
-                  : 'useSsrEffect';
-
-              const useRegisterEffectNames = Array.isArray(useRegisterEffectName)
-                ? useRegisterEffectName
-                : [useRegisterEffectName];
-
-              const useSsrStateNames = Array.isArray(useSsrStateName) ? useSsrStateName : [useSsrStateName];
-
-              const useSsrEffectNames = Array.isArray(useSsrEffectName) ? useSsrEffectName : [useSsrEffectName];
-
-              useRegisterEffectNames.forEach((registerEffect) => {
-                if (path.node.callee.name === registerEffect) {
-                  if (path.node.arguments.length === 0) {
-                    const id = md5(pathNode.relative(cwd, filename));
-                    createDummy(globalCache, id, 'useRegisterEffect');
-                    const effectID = `register-effect-${id}-${globalCache[id].useRegisterEffect++}`;
-                    path.node.arguments.push(t.StringLiteral(effectID));
-                  }
+              if (useRegisterEffectNames.includes(name)) {
+                if (args.length === 0) {
+                  args.push(t.StringLiteral(`register-effect-${id}-${counters.useRegisterEffect++}`));
                 }
-              });
+              }
 
-              useSsrStateNames.forEach((stateName) => {
-                if (path.node.callee.name === stateName) {
-                  if (path.node.arguments.length === 1) {
-                    const id = md5(pathNode.relative(cwd, filename));
-                    createDummy(globalCache, id, 'useSsrState');
-                    const setStateID = `state-${id}-${globalCache[id].useSsrState++}`;
-                    path.node.arguments.push(t.StringLiteral(setStateID));
-                  }
+              if (useSsrStateNames.includes(name)) {
+                if (args.length === 1) {
+                  args.push(t.StringLiteral(`state-${id}-${counters.useSsrState++}`));
                 }
-              });
+              }
 
-              useSsrEffectNames.forEach((ssrEffectName) => {
-                if (path.node.callee.name === ssrEffectName) {
-                  const args = path.node.arguments;
-                  const lastItem = args[args.length - 1];
-                  const lastItemIsArray = lastItem?.type === 'ArrayExpression';
-                  const firstItemIsFunction =
-                    lastItem?.type === 'Identifier' || lastItem?.type.indexOf('FunctionExpression') >= 0;
-
-                  if (
-                    (path.node.arguments.length === 2 && lastItemIsArray) ||
-                    (path.node.arguments.length === 1 && firstItemIsFunction)
-                  ) {
-                    const id = md5(pathNode.relative(cwd, filename));
-                    createDummy(globalCache, id, 'useSsrEffect');
-                    const effectID = `ssr-effect-${id}-${globalCache[id].useSsrEffect++}`;
-                    path.node.arguments.push(t.StringLiteral(effectID));
-                  }
+              if (useSsrEffectNames.includes(name)) {
+                // useSsrEffect(effect) or useSsrEffect(effect, deps), the id is not passed yet
+                if (args.length === 1 || (args.length === 2 && !isStringId(args[1]))) {
+                  args.push(t.StringLiteral(`ssr-effect-${id}-${counters.useSsrEffect++}`));
                 }
-              });
+              }
             },
           });
         },

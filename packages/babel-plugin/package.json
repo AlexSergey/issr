@@ -1,6 +1,6 @@
 {
   "name": "@issr/babel-plugin",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "private": false,
   "description": "Babel plugin for iSSR",
   "keywords": [
@@ -29,9 +29,7 @@
     "format:package": "sort-package-json",
     "format:prettier": "prettier --write \"index.js\"",
     "lint": "eslint .",
-    "production": "npm run lint && npm publish --access public"
-  },
-  "dependencies": {
-    "md5": "2.3.0"
+    "production": "npm run lint && npm test && npm publish --access public",
+    "test": "node tests.js"
   }
 }

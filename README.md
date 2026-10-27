@@ -348,6 +348,40 @@ The final step is webpack's scripts for development mode and building. Add to yo
 ```
 ***
 
+### Lists: SsrScope
+
+Ids for `useSsrState`, `useSsrEffect` and `useRegisterEffect` are generated per call site, so every instance of a component rendered several times (for example, in a list) shares the same state and effects. Wrap each instance in `SsrScope` with a stable unique id, the same on the server and the client:
+
+```jsx
+import { SsrScope } from '@issr/core';
+
+const Users = ({ ids }) => (
+  <ul>
+    {ids.map((id) => (
+      <SsrScope id={id} key={id}>
+        <User id={id} />
+      </SsrScope>
+    ))}
+  </ul>
+);
+```
+
+Scopes can be nested, their ids are joined.
+
+### ExcludeSsr
+
+Renders its children only on the client. The server renders nothing, so during hydration the children appear right after mount to avoid a hydration mismatch.
+
+```jsx
+import { ExcludeSsr } from '@issr/core';
+
+<ExcludeSsr>
+  <Map />
+</ExcludeSsr>
+```
+
+***
+
 - **Please see [Articles](#articles) to learn how implement SSR for Redux/Sagas/Thunks and other.**
 - **Please see "examples" folder to learn other cases** - <a href="https://github.com/AlexSergey/issr/blob/master/examples" target="_blank">here</a>
 

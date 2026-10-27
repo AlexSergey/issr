@@ -25,7 +25,7 @@ type IState = Record<string, unknown>;
 export const serverRender = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   stream: async <T extends Function>(
-    iteration: (count?: number) => ReactNode,
+    iteration: () => Promise<ReactNode> | ReactNode,
     opts?: IServerRenderOptions<T>,
   ): Promise<IServerRenderResultStream> => {
     if (typeof ReactDOMServer.renderToPipeableStream === 'undefined') {
@@ -48,23 +48,15 @@ export const serverRender = {
 
       if (typeof opts?.outsideEffects === 'function') {
         await opts.outsideEffects();
-
-        if (waited.length === 0) {
-          return renderStream(App);
-        }
       }
 
       if (waited.length === 0) {
         return renderStream(App);
       }
 
-      if (waited.length > 0) {
-        await SSR.effectCollection.runEffects();
+      await SSR.effectCollection.runEffects();
 
-        return await renderNested();
-      }
-
-      return renderStream(App);
+      return renderNested();
     };
 
     const stream = await renderNested();
@@ -76,7 +68,7 @@ export const serverRender = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   string: async <T extends Function>(
-    iteration: (count?: number) => ReactNode,
+    iteration: () => Promise<ReactNode> | ReactNode,
     opts?: IServerRenderOptions<T>,
   ): Promise<IServerRenderResultString> => {
     const SSR = createSsr(opts?.cachedState);
@@ -100,13 +92,9 @@ export const serverRender = {
         return _html;
       }
 
-      if (waited.length > 0) {
-        await SSR.effectCollection.runEffects();
+      await SSR.effectCollection.runEffects();
 
-        return await renderNested();
-      }
-
-      return _html;
+      return renderNested();
     };
 
     const html = await renderNested();

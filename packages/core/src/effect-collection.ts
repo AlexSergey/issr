@@ -25,25 +25,14 @@ export class EffectCollection {
 
   runEffects = async (): Promise<void> => {
     const waited = this.getWaited();
+    const results = await Promise.allSettled(waited.map((effect) => effect.getCallback()));
 
-    if (waited.length > 0) {
-      const results = await Promise.allSettled(waited.map((effect) => effect.getCallback()));
-
-      results.forEach((result, num) => {
-        const effect = waited[num];
-
-        if (result.status === 'fulfilled') {
-          if (effect) {
-            effect.done();
-          }
-        }
-
-        if (result.status === 'rejected') {
-          if (effect) {
-            effect.failed();
-          }
-        }
-      });
-    }
+    waited.forEach((effect, num) => {
+      if (results[num]?.status === 'rejected') {
+        effect.failed();
+      } else {
+        effect.done();
+      }
+    });
   };
 }

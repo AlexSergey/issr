@@ -14,7 +14,7 @@
     "start": "cross-env NODE_ENV=development node build"
   },
   "dependencies": {
-    "@issr/core": "4.0.0",
+    "@issr/core": "4.1.0",
     "@loadable/component": "5.16.7",
     "@loadable/server": "5.16.7",
     "koa": "2.15.3",
@@ -27,6 +27,6 @@
     "serialize-javascript": "6.0.2"
   },
   "devDependencies": {
-    "@issr/babel-plugin": "4.0.0"
+    "@issr/babel-plugin": "4.1.0"
   }
 }

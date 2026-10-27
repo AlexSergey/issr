@@ -1,10 +1,66 @@
 /**
  * @jest-environment node
  */
+import { Writable } from 'node:stream';
 import { PropsWithChildren, ReactNode } from 'react';
+import ReactDOMServer, { PipeableStream } from 'react-dom/server';
 
 import { useRegisterEffect, useSsrEffect, useSsrState } from './hooks';
+import { SsrScope } from './i-ssr';
 import { serverRender } from './server';
+
+const streamToString = (stream: PipeableStream): Promise<string> =>
+  new Promise((resolve, reject) => {
+    let html = '';
+    const writable = new Writable({
+      write(chunk, _encoding, callback): void {
+        html += chunk.toString();
+        callback();
+      },
+    });
+    writable.on('finish', () => resolve(html));
+    writable.on('error', reject);
+    stream.pipe(writable);
+  });
+
+const Loader = ({ fail = false, name }: { fail?: boolean; name: string }): ReactNode => {
+  const [state, setState] = useSsrState('none', 'state-0');
+  const registerEffect = useRegisterEffect('effect-0');
+
+  useSsrEffect(
+    () => {
+      registerEffect(() => (fail ? Promise.reject(new Error(name)) : Promise.resolve(`loaded ${name}`))).then(
+        (data) => {
+          setState(data);
+        },
+        () => {
+          setState('error');
+        },
+      );
+    },
+    [],
+    'use-effect-0',
+  );
+
+  return <p>{state}</p>;
+};
+
+const Item = ({ name }: { name: string }): ReactNode => {
+  const [state, setState] = useSsrState('none', 'state-0');
+  const registerEffect = useRegisterEffect('effect-0');
+
+  useSsrEffect(
+    () => {
+      registerEffect(() => Promise.resolve(`loaded ${name}`)).then((data) => {
+        setState(data);
+      });
+    },
+    [],
+    'use-effect-0',
+  );
+
+  return <li>{state}</li>;
+};
 
 describe('server render tests', () => {
   test('pure state', async () => {
@@ -226,6 +282,128 @@ describe('server render tests', () => {
       'state-1': { show: true, value: 'A Component' },
       'state-2': 'B Component',
       'state-3': 'C Component',
+    });
+  });
+
+  test('SsrScope gives every list item its own state and effects', async () => {
+    const { html, state } = await serverRender.string(() => (
+      <ul>
+        {['a', 'b'].map((name) => (
+          <SsrScope id={name} key={name}>
+            <Item name={name} />
+          </SsrScope>
+        ))}
+      </ul>
+    ));
+
+    expect(html).toBe('<ul><li>loaded a</li><li>loaded b</li></ul>');
+    expect(state).toStrictEqual({ 'a:state-0': 'loaded a', 'b:state-0': 'loaded b' });
+  });
+
+  test('nested SsrScope ids are joined', async () => {
+    const { state } = await serverRender.string(() => (
+      <SsrScope id="list">
+        <SsrScope id={1}>
+          <Item name="x" />
+        </SsrScope>
+      </SsrScope>
+    ));
+
+    expect(state).toStrictEqual({ 'list/1:state-0': 'loaded x' });
+  });
+
+  test('failed effect does not break rendering', async () => {
+    const { html, state } = await serverRender.string(() => <Loader fail name="x" />);
+
+    expect(html).toBe('<p>error</p>');
+    expect(state).toStrictEqual({ 'state-0': 'error' });
+  });
+
+  test('cachedState is used and the effect result overrides it', async () => {
+    const { html, state } = await serverRender.string(() => <Loader name="x" />, {
+      cachedState: { 'state-0': 'cached', 'state-other': 'kept' },
+    });
+
+    expect(html).toBe('<p>loaded x</p>');
+    expect(state).toStrictEqual({ 'state-0': 'loaded x', 'state-other': 'kept' });
+  });
+
+  test('outsideEffects are awaited together with effects', async () => {
+    const outsideEffects = jest.fn(() => Promise.resolve());
+
+    const { html } = await serverRender.string(() => <Loader name="x" />, { outsideEffects });
+
+    expect(html).toBe('<p>loaded x</p>');
+    // first render has effects, second render has none
+    expect(outsideEffects).toHaveBeenCalledTimes(2);
+  });
+
+  test('iteration can be async', async () => {
+    const { html } = await serverRender.string(async () => <Loader name="async" />);
+
+    expect(html).toBe('<p>loaded async</p>');
+  });
+
+  describe('stream', () => {
+    test('renders without effects', async () => {
+      const { state, stream } = await serverRender.stream(() => <div>static</div>);
+
+      expect(await streamToString(stream)).toBe('<div>static</div>');
+      expect(state).toStrictEqual({});
+    });
+
+    test('waits for effects before streaming', async () => {
+      const { state, stream } = await serverRender.stream(() => (
+        <SsrScope id="a">
+          <Loader name="a" />
+        </SsrScope>
+      ));
+
+      expect(await streamToString(stream)).toBe('<p>loaded a</p>');
+      expect(state).toStrictEqual({ 'a:state-0': 'loaded a' });
+    });
+
+    test('awaits outsideEffects', async () => {
+      const outsideEffects = jest.fn(() => Promise.resolve());
+
+      const { stream } = await serverRender.stream(() => <Loader name="x" />, { outsideEffects });
+
+      expect(await streamToString(stream)).toBe('<p>loaded x</p>');
+      expect(outsideEffects).toHaveBeenCalledTimes(2);
+    });
+
+    test('passes streamOptions', async () => {
+      const onShellReady = jest.fn();
+
+      const { stream } = await serverRender.stream(() => <div>static</div>, {
+        streamOptions: { onShellReady },
+      });
+      await streamToString(stream);
+
+      expect(onShellReady).toHaveBeenCalledTimes(1);
+    });
+
+    test('streamOptionsFn receives the final state', async () => {
+      const streamOptionsFn = jest.fn(() => ({}));
+
+      const { stream } = await serverRender.stream(() => <Loader name="x" />, { streamOptionsFn });
+      await streamToString(stream);
+
+      expect(streamOptionsFn).toHaveBeenCalledWith({ 'state-0': 'loaded x' });
+    });
+
+    test('throws when streaming is not supported', async () => {
+      const descriptor = Object.getOwnPropertyDescriptor(
+        ReactDOMServer,
+        'renderToPipeableStream',
+      ) as PropertyDescriptor;
+      Object.defineProperty(ReactDOMServer, 'renderToPipeableStream', { configurable: true, value: undefined });
+
+      try {
+        await expect(serverRender.stream(() => <div />)).rejects.toThrow('Streaming is available only on React 18');
+      } finally {
+        Object.defineProperty(ReactDOMServer, 'renderToPipeableStream', descriptor);
+      }
     });
   });
 });

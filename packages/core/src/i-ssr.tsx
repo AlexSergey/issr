@@ -1,4 +1,4 @@
-import { createContext, FunctionComponent, isValidElement, ReactNode, useEffect } from 'react';
+import { createContext, FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { EffectCollection } from './effect-collection';
 import { clone, isBackend } from './utils';
@@ -29,18 +29,33 @@ interface IReturnCreateIssr<P> extends FunctionComponent<P> {
 
 export const IssrContext = createContext<IIssrContext>({} as IIssrContext);
 
+export const IssrScopeContext = createContext<string>('');
+
+export const SsrScope = ({ children, id }: { children: ReactNode; id: number | string }): ReactNode => {
+  const parent = useContext(IssrScopeContext);
+
+  return (
+    <IssrScopeContext.Provider value={parent ? `${parent}/${id}` : String(id)}>{children}</IssrScopeContext.Provider>
+  );
+};
+
 export const ExcludeSsr = ({ children }: { children: ExcludeFn | ReactNode }): null | ReactNode => {
-  if (isBackend()) {
+  const { isLoading } = useContext(IssrContext);
+  // The backend renders nothing here, so during hydration children appear only after mount to avoid a mismatch
+  const [mounted, setMounted] = useState(() => !isBackend() && typeof isLoading === 'function' && !isLoading());
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (isBackend() || !mounted) {
     return null;
-  }
-  if (isValidElement(children)) {
-    return children;
   }
   if (typeof children === 'function') {
     return children();
   }
 
-  return null;
+  return children ?? null;
 };
 
 interface IOnComplete {
@@ -75,9 +90,7 @@ export const createSsr = (
   };
 
   const setEffectCalledState = (id: string): void => {
-    if (!app.calledState[id]) {
-      app.calledState[id] = true;
-    }
+    app.calledState[id] = true;
   };
 
   const getEffectCalledState = (id: string): boolean => {
@@ -94,17 +107,18 @@ export const createSsr = (
 
   const getState = (): IState => clone(app.state);
 
+  // Created once so context consumers do not re-render on every iSSR render
+  const contextValue: IIssrContext = {
+    effectCollection,
+    getEffectCalledState,
+    getState,
+    initState,
+    isLoading,
+    setEffectCalledState,
+  };
+
   const iSSR = ({ children }: { children: ReactNode }): ReactNode => (
-    <IssrContext.Provider
-      value={{
-        effectCollection,
-        getEffectCalledState,
-        getState,
-        initState,
-        isLoading,
-        setEffectCalledState,
-      }}
-    >
+    <IssrContext.Provider value={contextValue}>
       {children}
       <OnComplete loading={app.loading} onLoad={onLoad} />
     </IssrContext.Provider>

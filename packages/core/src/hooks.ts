@@ -12,8 +12,21 @@ import {
 } from 'react';
 
 import { Effect } from './effect';
-import { IssrContext } from './i-ssr';
+import { IssrContext, IssrScopeContext } from './i-ssr';
 import { isBackend } from './utils';
+
+const isThenable = (value: unknown): value is PromiseLike<unknown> =>
+  typeof (value as null | PromiseLike<unknown>)?.then === 'function';
+
+const isSameDeps = (prev: DependencyList, next: DependencyList): boolean =>
+  prev.length === next.length && prev.every((dep, i) => Object.is(dep, next[i]));
+
+// Prefixes the id with the closest SsrScope, so one component rendered several times gets unique ids
+const useScopedId = (id: string): string => {
+  const scope = useContext(IssrScopeContext);
+
+  return scope ? `${scope}:${id}` : id;
+};
 
 export const useSsrState = <S>(initialState: (() => S) | S, id?: string): [S, Dispatch<SetStateAction<S>>] => {
   if (typeof id !== 'string') {
@@ -22,27 +35,34 @@ export const useSsrState = <S>(initialState: (() => S) | S, id?: string): [S, Di
     );
   }
   const { initState } = useContext(IssrContext);
+  const key = useScopedId(id);
 
   const appStateFragment: S = useMemo<S>(
-    () => (typeof initState[id] === 'undefined' ? initialState : initState[id]) as S,
-    [initState, id, initialState],
+    () => (typeof initState[key] === 'undefined' ? initialState : initState[key]) as S,
+    [initState, key, initialState],
   );
   const [state, setState] = useState<S>(appStateFragment);
+  // Source of truth for functional updates: initState[key] may be absent (initial value came from the hook argument)
+  const stateRef = useRef<S>(state);
 
-  const modifiedSetState = useCallback((innerState: ((prevState: S) => S) | S) => {
-    const s = innerState instanceof Function ? innerState(initState[id] as S) : innerState;
-    initState[id] = s;
+  const modifiedSetState = useCallback(
+    (innerState: ((prevState: S) => S) | S) => {
+      const s = innerState instanceof Function ? innerState(stateRef.current) : innerState;
+      stateRef.current = s;
+      initState[key] = s;
 
-    setState(s);
-  }, []);
+      setState(s);
+    },
+    [initState, key],
+  );
 
   useEffect(
     () => (): void => {
       // Clear Global state when component was unmounted
-      initState[id] = undefined;
-      delete initState[id];
+      initState[key] = undefined;
+      delete initState[key];
     },
-    [],
+    [initState, key],
   );
 
   return [state, modifiedSetState];
@@ -57,43 +77,36 @@ export const useSsrEffect = (effect: EffectCallback, deps?: DependencyList | str
     );
   }
 
-  const initHook = useRef(true);
+  const key = useScopedId(effectId);
   const cb = useRef(effect);
   const { getEffectCalledState, isLoading, setEffectCalledState } = useContext(IssrContext);
-  const isCalled = getEffectCalledState(effectId);
-  const loading = isLoading();
-  const isClient = !isBackend();
-  const firstLoadingOnTheClient = isClient && loading && initHook.current;
-  const firstLoadingOnTheBackend = isBackend() && initHook.current && !isCalled;
-  initHook.current = false;
   const allDeps = Array.isArray(deps) ? deps : [];
+  // Deps of the first client render during hydration: the effect has already been called on the backend for them.
+  // Captured once per component instance, so re-renders and StrictMode double renders do not change it
+  const [hydrationDeps] = useState<DependencyList | null>(() => (!isBackend() && isLoading() ? allDeps : null));
+  const skipDeps = useRef(hydrationDeps);
 
   useEffect(() => {
     cb.current = effect;
   }, [effect]);
 
   // Effect on the backend side must run synchronously
-  if (firstLoadingOnTheBackend) {
+  if (isBackend() && !getEffectCalledState(key)) {
     effect();
-    setEffectCalledState(effectId);
+    setEffectCalledState(key);
   }
 
-  useEffect(
-    () => {
-      // First call after hydration must be skipped on the client side
-      if (firstLoadingOnTheClient) {
+  useEffect(() => {
+    // First call after hydration must be skipped on the client side, until deps change
+    if (skipDeps.current) {
+      if (isSameDeps(skipDeps.current, allDeps)) {
         return;
       }
-      // Already called in the backend side
-      if (firstLoadingOnTheBackend) {
-        return;
-      }
-      if (typeof cb.current === 'function') {
-        return cb.current();
-      }
-    },
-    allDeps.concat([firstLoadingOnTheBackend, firstLoadingOnTheClient]),
-  );
+      skipDeps.current = null;
+    }
+
+    return cb.current();
+  }, allDeps);
 };
 
 export const useRegisterEffect = (
@@ -110,6 +123,7 @@ export const useRegisterEffect = (
   }
 
   const { effectCollection } = useContext(IssrContext);
+  const key = useScopedId(id);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <ArgumentsType extends any[], ReturnType>(
@@ -118,11 +132,11 @@ export const useRegisterEffect = (
   ): ReturnType => {
     const res = cb(...args);
 
-    if (!effectCollection.getEffect(id)) {
-      const effect = new Effect({ id });
+    if (!effectCollection.getEffect(key)) {
+      const effect = new Effect({ id: key });
       effectCollection.addEffect(effect);
 
-      if (res instanceof Promise) {
+      if (isThenable(res)) {
         effect.addCallback(res);
       }
     }
